@@ -444,7 +444,7 @@ function staffCard(s,i){
   const nameIn = el('input',{type:'text',value:esc(s.name),placeholder:'Name',oninput:e=>{state.staff[i].name=e.target.value;setDirty(true);}});
   const pronIn = el('input',{type:'text',value:esc(s.pronouns),placeholder:'they/them',oninput:e=>{state.staff[i].pronouns=e.target.value;setDirty(true);}});
   const roleIn = el('input',{type:'text',value:esc(s.role),placeholder:'Role',oninput:e=>{state.staff[i].role=e.target.value;setDirty(true);}});
-  const bioIn  = el('textarea',{placeholder:'Short bio',oninput:e=>{state.staff[i].bio=e.target.value;setDirty(true);}}); bioIn.value=esc(s.bio);
+  const bioIn  = el('textarea',{placeholder:'Bio (as long as you like)',oninput:e=>{state.staff[i].bio=e.target.value;setDirty(true);}}); bioIn.value=esc(s.bio);
 
   const fields = el('div',{class:'fields'},
     el('div',{class:'row2'}, el('div',{},el('label',{},'Name'),nameIn), el('div',{},el('label',{},'Pronouns'),pronIn)),

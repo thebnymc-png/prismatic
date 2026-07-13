@@ -150,7 +150,7 @@ export function sanitizeContent(input) {
       name,
       pronouns: clip(s?.pronouns, 40).trim(),
       role: clip(s?.role, 60).trim(),
-      bio: clip(s?.bio, 600).trim(),
+      bio: clip(s?.bio, 8000).trim(),
       color: ALLOWED_COLORS.has(s?.color) ? s.color : "#131019",
       photo: mediaKey(s?.photo),
     });
