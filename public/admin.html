@@ -16,6 +16,7 @@
     --display:"Bricolage Grotesque",system-ui,sans-serif;--body:"Inter",system-ui,sans-serif;--mono:"Space Mono",monospace;
   }
   *{margin:0;box-sizing:border-box}
+  html{scrollbar-gutter:stable;overflow-y:scroll}
   body{font-family:var(--body);background:#f4f1f8;color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
   a{color:inherit}
   .mono{font-family:var(--mono)}
@@ -54,7 +55,7 @@
   main{max-width:960px;margin:0 auto;padding:34px 24px 80px}
   /* tabbed shell */
   .admin-shell{max-width:1120px;margin:0 auto;padding:28px 24px 90px;display:grid;grid-template-columns:210px 1fr;gap:30px;align-items:start}
-  .admin-shell main{max-width:none;margin:0;padding:0}
+  .admin-shell main{max-width:none;margin:0;padding:0;min-height:calc(100vh - 210px)}
   .admin-nav{position:sticky;top:24px;display:flex;flex-direction:column;gap:4px}
   .nav-item{display:flex;align-items:center;gap:11px;width:100%;text-align:left;padding:11px 14px;border-radius:11px;background:none;font-size:.96rem;font-weight:500;color:var(--muted);transition:background .15s,color .15s}
   .nav-item:hover{background:#fff;color:var(--ink)}
@@ -62,7 +63,7 @@
   .nav-ico{width:20px;text-align:center;font-size:.95rem;opacity:.9}
   .panel{display:none;animation:panelin .25s ease}
   .panel.active{display:block}
-  @keyframes panelin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  @keyframes panelin{from{opacity:0}to{opacity:1}}
   .panel-head{margin-bottom:22px}
   .panel-head h2{font-family:var(--display);font-weight:700;font-size:1.6rem;letter-spacing:-.01em;margin-bottom:6px}
   .panel-head .sub{color:var(--muted);font-size:.95rem}
@@ -133,8 +134,9 @@
   .stat-recent{margin-top:18px;border-top:1px solid var(--line);padding-top:16px}
   .stat-recent-title{font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
   .stat-row{font-size:.9rem;color:var(--ink-2,#333);padding:3px 0}
-  .savebar{position:sticky;bottom:0;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-top:1px solid var(--line);
-    padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 -24px;border-radius:0}
+  .savebar{position:sticky;bottom:0;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:14px 0;z-index:30}
+  .savebar-in{max-width:1120px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  @media (max-width:760px){.savebar-in{padding:0 16px}}
   .savebar .msg{font-size:.9rem;color:var(--muted)}
   .savebar .msg.good{color:#1e7d3e;font-weight:600}
   .savebar .msg.bad{color:#b23120;font-weight:600}
@@ -219,8 +221,10 @@
   </div>
 
   <div class="savebar">
-    <span class="msg" id="saveMsg">No unsaved changes.</span>
-    <button class="btn btn-spectrum" id="saveBtn" disabled>Save changes</button>
+    <div class="savebar-in">
+      <span class="msg" id="saveMsg">No unsaved changes.</span>
+      <button class="btn btn-spectrum" id="saveBtn" disabled>Save changes</button>
+    </div>
   </div>
 </div>
 
@@ -333,7 +337,7 @@ $('#adminNav').addEventListener('click', e=>{
   const panel=item.getAttribute('data-panel');
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n===item));
   document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.getAttribute('data-panel')===panel));
-  window.scrollTo({top:0,behavior:'smooth'});
+  if(window.scrollY>0)window.scrollTo(0,0);
 });
 
 async function enterApp(){
