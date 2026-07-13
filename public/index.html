@@ -148,6 +148,26 @@
   .staff-body .pronouns{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--violet);margin-top:5px}
   .staff-body .role{font-size:.95rem;color:var(--ink-faint);margin-top:2px}
   .staff-body p{color:var(--ink-soft);font-size:.98rem;margin-top:12px}
+  .read-more{display:inline;border:none;background:none;padding:0;margin-left:.3em;font:inherit;font-weight:600;color:var(--accent,#7B2FF7);cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+  .read-more:hover{opacity:.72}
+  .bio-modal{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
+  .bio-modal[hidden]{display:none}
+  .bio-modal-overlay{position:absolute;inset:0;background:rgba(19,16,25,.62);backdrop-filter:blur(3px);animation:bmfade .25s ease}
+  .bio-modal-card{position:relative;background:#fff;border-radius:22px;max-width:520px;width:100%;max-height:88vh;overflow:auto;box-shadow:0 40px 90px -30px rgba(19,16,25,.5);border-top:5px solid var(--accent,#7B2FF7);animation:bmpop .3s cubic-bezier(.2,.8,.2,1)}
+  .bio-modal-close{position:absolute;top:14px;right:16px;width:36px;height:36px;border-radius:50%;border:none;background:rgba(19,16,25,.06);font-size:1.5rem;line-height:1;color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .bio-modal-close:hover{background:rgba(19,16,25,.12)}
+  .bio-modal-top{display:flex;gap:20px;align-items:center;padding:34px 32px 0}
+  .bio-modal-photo{width:104px;height:104px;flex:none;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#efe9f7,#e6f1fa)}
+  .bio-modal-photo .staff-photo{width:100%;height:100%;aspect-ratio:auto}
+  .bio-modal-photo img{width:100%;height:100%;object-fit:cover}
+  .bio-modal-card h3{font-family:var(--display);font-weight:600;font-size:1.5rem;letter-spacing:-.01em}
+  .bio-modal-card .pronouns{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent,var(--violet));margin-top:6px}
+  .bio-modal-card .role{font-size:1rem;color:var(--ink-faint);margin-top:2px}
+  .bio-modal-bio{padding:20px 32px 34px;color:var(--ink-soft);font-size:1.02rem;line-height:1.62}
+  @keyframes bmfade{from{opacity:0}to{opacity:1}}
+  @keyframes bmpop{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.bio-modal-overlay,.bio-modal-card{animation:none}}
+  @media (max-width:520px){.bio-modal-top{flex-direction:column;text-align:center;padding-top:40px}}
 
   /* Apply */
   .apply{position:relative;padding:100px 0;overflow:hidden;background:
@@ -323,9 +343,9 @@
 <section class="hero" id="top">
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <span class="eyebrow" style="color:rgba(255,255,255,.85)">NDIS supports across South East Queensland</span>
-      <h1>Specialised care<br>on the <span class="spec">spectrum.</span></h1>
-      <p class="lead" data-read>We support people with physical and mental disabilities. Our supports are LGBTQIASB+ affirming, and they're open to everyone, whether you're part of the community or not.</p>
+      <span class="eyebrow" style="color:rgba(255,255,255,.85)" data-cms="hero.eyebrow">NDIS supports across South East Queensland</span>
+      <h1 data-cms="hero.headline" data-rich="spec">Specialised care<br>on the <span class="spec">spectrum.</span></h1>
+      <p class="lead" data-read data-cms="hero.lead">We support people with physical and mental disabilities. Our supports are LGBTQIASB+ affirming, and they're open to everyone, whether you're part of the community or not.</p>
       <div class="hero-cta">
         <a href="https://www.jotform.com/form/260211704799055" target="_blank" rel="noopener" class="btn btn-spectrum">Apply here</a>
         <a href="tel:0460586201" class="btn btn-ghost-light">Call 0460 586 201</a>
@@ -336,8 +356,8 @@
         <button class="listen listen-stop" id="stopBtn" hidden>Stop</button>
       </div>
       <div class="hero-chips">
-        <span class="chip"><span class="dot"></span>Taking new participants</span>
-        <span class="chip">2 hours or 20, both welcome</span>
+        <span class="chip"><span class="dot"></span><span data-cms="hero.chip1">Taking new participants</span></span>
+        <span class="chip"><span data-cms="hero.chip2">2 hours or 20, both welcome</span></span>
       </div>
     </div>
 
@@ -373,11 +393,11 @@
   <div class="wrap split">
     <div class="media"><img id="site-handshake" src="/assets/handshake.jpg" alt="Two people shaking hands, lit by refracted rainbow light" loading="lazy"></div>
     <div>
-      <span class="eyebrow">Our approach</span>
-      <h2>Not just here for the <em>good times.</em></h2>
-      <p data-read>Plenty of providers will tell you why they're the best. We're not going to do that. We'll show up, do the work, and let you judge for yourself.</p>
-      <p data-read>Real support means being there on the hard days too, not only the easy ones. We're realistic about what that looks like, and we'd rather be honest with you than polished at you.</p>
-      <p class="pull" data-read>We can't promise we're the best. We can promise we'll try our hardest, and that the care is real.</p>
+      <span class="eyebrow" data-cms="approach.eyebrow">Our approach</span>
+      <h2 data-cms="approach.heading" data-rich="em">Not just here for the <em>good times.</em></h2>
+      <p data-read data-cms="approach.p1">Plenty of providers will tell you why they're the best. We're not going to do that. We'll show up, do the work, and let you judge for yourself.</p>
+      <p data-read data-cms="approach.p2">Real support means being there on the hard days too, not only the easy ones. We're realistic about what that looks like, and we'd rather be honest with you than polished at you.</p>
+      <p class="pull" data-read data-cms="approach.pull">We can't promise we're the best. We can promise we'll try our hardest, and that the care is real.</p>
     </div>
   </div>
 </section>
@@ -386,11 +406,11 @@
 <section class="section" id="supports" style="padding-top:0">
   <div class="wrap">
     <div class="section-head">
-      <span class="eyebrow">What we offer</span>
-      <h2>Supports shaped around you</h2>
-      <p data-read>Everyday help delivered with respect and consistency. We support people living with physical disability, mental health conditions, and both together.</p>
+      <span class="eyebrow" data-cms="supports.eyebrow">What we offer</span>
+      <h2 data-cms="supports.heading">Supports shaped around you</h2>
+      <p data-read data-cms="supports.intro">Everyday help delivered with respect and consistency. We support people living with physical disability, mental health conditions, and both together.</p>
     </div>
-    <div class="cards">
+    <div class="cards" id="careCards">
       <article class="care-card"><div class="idx">01</div><h3>Daily living &amp; personal care</h3><p data-read>Dignified, hands-on support with the routines of daily life, at your pace and on your terms.</p></article>
       <article class="care-card"><div class="idx">02</div><h3>Getting out &amp; making friends</h3><p data-read>Socialising, meeting people and building a circle. We'll come along, help with the organising, and take the pressure out of showing up.</p></article>
       <article class="care-card"><div class="idx">03</div><h3>Hobbies &amp; new interests</h3><p data-read>Trying something new is easier with company. We'll help you find it, book it, get there, and do it without the hassle of going it alone.</p></article>
@@ -402,10 +422,10 @@
     </div>
 
     <div class="hours">
-      <div class="big">2 &ndash; 20</div>
+      <div class="big" data-cms="hours.big">2 &ndash; 20</div>
       <div>
-        <h3>Hours a week. Either is fine.</h3>
-        <p data-read>Whether you need as little as two hours a week or as many as twenty, we'll work with you. The goal is to actually assist you in the way you need, not to fill a roster.</p>
+        <h3 data-cms="hours.heading">Hours a week. Either is fine.</h3>
+        <p data-read data-cms="hours.body">Whether you need as little as two hours a week or as many as twenty, we'll work with you. The goal is to actually assist you in the way you need, not to fill a roster.</p>
       </div>
     </div>
   </div>
@@ -416,10 +436,10 @@
   <img id="site-community" class="bg" src="/assets/community.jpg" alt="A diverse group of people smiling together outdoors, including wheelchair users and an assistance dog" loading="lazy">
   <div class="veil"></div>
   <div class="wrap inner">
-    <span class="eyebrow">A space of belonging</span>
-    <h2>Open to <em>everyone.</em></h2>
-    <p data-read>We support people with physical disabilities and mental health conditions alike. Our supports are LGBTQIASB+ affirming, and you do not have to be part of the community to be welcome here.</p>
-    <p data-read>When a space is built to be safe for the people too often left out, it becomes a genuinely welcoming space for all.</p>
+    <span class="eyebrow" data-cms="community.eyebrow">A space of belonging</span>
+    <h2 data-cms="community.heading" data-rich="em">Open to <em>everyone.</em></h2>
+    <p data-read data-cms="community.p1">We support people with physical disabilities and mental health conditions alike. Our supports are LGBTQIASB+ affirming, and you do not have to be part of the community to be welcome here.</p>
+    <p data-read data-cms="community.p2">When a space is built to be safe for the people too often left out, it becomes a genuinely welcoming space for all.</p>
     <div class="btn-row">
       <a href="https://www.jotform.com/form/260211704799055" target="_blank" rel="noopener" class="btn btn-spectrum">Apply here</a>
       <a href="#contact" class="btn btn-ghost-light">Talk to us</a>
@@ -431,12 +451,12 @@
 <section class="section areas" id="areas">
   <div class="wrap">
     <div>
-      <span class="eyebrow">Where we work</span>
-      <h2>Across South East Queensland</h2>
-      <p class="lede" data-read>From Toowoomba and the Lockyer Valley through Ipswich to greater Brisbane. Local support, close to home. Not sure if we reach you? Just ask.</p>
+      <span class="eyebrow" data-cms="areas.eyebrow">Where we work</span>
+      <h2 data-cms="areas.heading">Across South East Queensland</h2>
+      <p class="lede" data-read data-cms="areas.lede">From Toowoomba and the Lockyer Valley through Ipswich to greater Brisbane. Local support, close to home. Not sure if we reach you? Just ask.</p>
       <a href="#contact" class="btn btn-primary" style="margin-top:26px">Check availability</a>
     </div>
-    <div class="area-list">
+    <div class="area-list" id="areaList">
       <div class="area"><span class="pin">&#9670;</span><b>Brisbane Area</b><span class="state">QLD</span></div>
       <div class="area"><span class="pin">&#9670;</span><b>Ipswich</b><span class="state">QLD</span></div>
       <div class="area"><span class="pin">&#9670;</span><b>Toowoomba</b><span class="state">QLD</span></div>
@@ -460,9 +480,9 @@
 <section class="section" id="team">
   <div class="wrap">
     <div class="section-head">
-      <span class="eyebrow">Our team</span>
-      <h2>The people you'll actually meet</h2>
-      <p data-read>Support works when it's built on a relationship. Here's who you'll be working with.</p>
+      <span class="eyebrow" data-cms="team.eyebrow">Our team</span>
+      <h2 data-cms="team.heading">The people you'll actually meet</h2>
+      <p data-read data-cms="team.intro">Support works when it's built on a relationship. Here's who you'll be working with.</p>
     </div>
     <div class="staff-grid" id="staffGrid">
       <article class="staff-card" style="--accent:#7B2FF7">
@@ -499,10 +519,10 @@
 <!-- ===== Apply ===== -->
 <section class="apply" id="apply">
   <div class="wrap inner">
-    <span class="eyebrow">Now taking new participants</span>
-    <h2 style="margin-top:16px">We're ready<br>when you are.</h2>
-    <p class="big" data-read>Capacity available for new participants.</p>
-    <p class="svc" data-read>Daily living, cleaning, community access and more.</p>
+    <span class="eyebrow" data-cms="apply.eyebrow">Now taking new participants</span>
+    <h2 style="margin-top:16px" data-cms="apply.heading" data-rich="em">We're ready<br>when you are.</h2>
+    <p class="big" data-read data-cms="apply.big">Capacity available for new participants.</p>
+    <p class="svc" data-read data-cms="apply.svc">Daily living, cleaning, community access and more.</p>
     <a href="https://www.jotform.com/form/260211704799055" target="_blank" rel="noopener" class="btn btn-spectrum">Apply now</a>
     <span class="price-link">Want to understand what supports cost? Read the current <a href="https://www.ndis.gov.au/providers/pricing-arrangements" target="_blank" rel="noopener">NDIS Pricing Arrangements and Price Limits</a> (formerly the NDIS Price Guide) on the official NDIS website.</span>
   </div>
@@ -605,9 +625,9 @@
       <div class="inner">
         <div class="contact-grid">
           <div class="contact-left">
-            <span class="eyebrow" style="color:#ffffff">Get in touch</span>
-            <h2 style="margin-top:16px">Let's build support that fits your life.</h2>
-            <p data-read>Send us a message and we'll get back to you. Prefer to apply straight away? You can do that too.</p>
+            <span class="eyebrow" style="color:#ffffff" data-cms="contact.eyebrow">Get in touch</span>
+            <h2 style="margin-top:16px" data-cms="contact.heading">Let's build support that fits your life.</h2>
+            <p data-read data-cms="contact.intro">Send us a message and we'll get back to you. Prefer to apply straight away? You can do that too.</p>
             <div class="contact-methods">
               <a class="method" href="tel:0460586201">
                 <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
@@ -692,6 +712,28 @@
   </div>
 </footer>
 
+<!-- Staff bio modal (populated on "Read more") -->
+<div class="bio-modal" id="bioModal" role="dialog" aria-modal="true" aria-labelledby="bioModalName" hidden>
+  <div class="bio-modal-overlay" data-close></div>
+  <div class="bio-modal-card">
+    <button type="button" class="bio-modal-close" aria-label="Close" data-close>&times;</button>
+    <div class="bio-modal-top">
+      <div class="bio-modal-photo" id="bioModalPhoto"></div>
+      <div>
+        <h3 id="bioModalName"></h3>
+        <div class="pronouns" id="bioModalPronouns"></div>
+        <div class="role" id="bioModalRole"></div>
+      </div>
+    </div>
+    <p class="bio-modal-bio" id="bioModalBio" data-read></p>
+  </div>
+</div>
+
+<!-- Cloudflare Web Analytics (privacy-first, no cookies).
+     Easiest: enable Web Analytics for this site in the Cloudflare dashboard (auto-injects, no code).
+     Or paste your token below and uncomment:
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "YOUR_CF_ANALYTICS_TOKEN"}'></script>
+-->
 <script>
   // Mobile menu
   var t=document.getElementById('menuToggle'),n=document.getElementById('navlinks');
@@ -758,9 +800,9 @@
       btn.disabled=true;btn.textContent='Sending...';
       var payload=Object.fromEntries(new FormData(cForm).entries());
       try{
-        var r=await fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(payload)});
-        var j=await r.json();
-        if(j.success){
+        var r=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(payload)});
+        var j=await r.json().catch(function(){return{};});
+        if(r.ok&&j.ok!==false){
           // Overlay the form: same footprint, cross-fade, no layout jump.
           cStatus.classList.remove('err');
           cStatus.hidden=false;
@@ -797,11 +839,105 @@
     }
     fetch('/api/content',{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(data){
       if(!data)return;
+      // editable copy
+      var text=data.text||{};
+      function rich(raw,kind){var v=esc(raw).replace(/\n/g,'<br>');var o=kind==='spec'?'<span class="spec">':'<em>',c=kind==='spec'?'</span>':'</em>';return v.replace(/\*([^*]+)\*/g,o+'$1'+c);}
+      document.querySelectorAll('[data-cms]').forEach(function(el){
+        var key=el.getAttribute('data-cms'); if(!(key in text))return;
+        var k=el.getAttribute('data-rich');
+        if(k)el.innerHTML=rich(text[key],k); else el.textContent=text[key];
+      });
+      // support cards
+      if(Array.isArray(data.supportCards)&&data.supportCards.length){
+        var cc=document.getElementById('careCards');
+        if(cc)cc.innerHTML=data.supportCards.map(function(c,i){
+          var n=('0'+(i+1)).slice(-2);
+          return '<article class="care-card"><div class="idx">'+n+'</div><h3>'+esc(c.title)+'</h3>'+(c.body?'<p data-read>'+esc(c.body)+'</p>':'')+'</article>';
+        }).join('');
+      }
+      // service areas
+      if(Array.isArray(data.areas)&&data.areas.length){
+        var al=document.getElementById('areaList');
+        if(al)al.innerHTML=data.areas.map(function(a){
+          return '<div class="area"><span class="pin">\u25C6</span><b>'+esc(a)+'</b><span class="state">QLD</span></div>';
+        }).join('');
+      }
       if(Array.isArray(data.staff)&&data.staff.length){var g=document.getElementById('staffGrid');if(g)g.innerHTML=data.staff.map(card).join('');}
       var im=data.images||{};
       if(im.community){var c=document.getElementById('site-community');if(c)c.src='/api/media/'+encodeURIComponent(im.community);}
       if(im.handshake){var h=document.getElementById('site-handshake');if(h)h.src='/api/media/'+encodeURIComponent(im.handshake);}
+      if(window.__processStaffCards)window.__processStaffCards();
     }).catch(function(){});
+  })();
+
+  // Truncate long bios to a "Read more" link, and pop the full profile into a modal.
+  (function(){
+    var LIMIT=100;
+    var modal=document.getElementById('bioModal');
+    if(!modal)return;
+    var lastFocus=null;
+
+    window.__processStaffCards=function(){
+      var cards=document.querySelectorAll('#staffGrid .staff-card');
+      for(var i=0;i<cards.length;i++){
+        var card=cards[i];
+        var p=card.querySelector('.staff-body p');
+        if(!p||p.getAttribute('data-full')!=null)continue; // skip if already processed
+        var full=(p.textContent||'').trim();
+        p.classList.add('bio');
+        p.setAttribute('data-full',full);
+        if(full.length>LIMIT){
+          var cut=full.slice(0,LIMIT).replace(/\s+\S*$/,'').trim(); // don't split a word
+          p.textContent=cut+'\u2026 ';
+          var btn=document.createElement('button');
+          btn.type='button'; btn.className='read-more'; btn.textContent='Read more';
+          p.appendChild(btn);
+        }
+      }
+    };
+
+    function open(card){
+      lastFocus=document.activeElement;
+      modal.style.setProperty('--accent', card.style.getPropertyValue('--accent')||'#7B2FF7');
+      var photo=card.querySelector('.staff-photo');
+      var pslot=document.getElementById('bioModalPhoto');
+      pslot_clear(pslot);
+      if(photo)pslot.appendChild(photo.cloneNode(true));
+      setText('bioModalName', textOf(card,'h3'));
+      setLine('bioModalPronouns', textOf(card,'.pronouns'));
+      setLine('bioModalRole', textOf(card,'.role'));
+      var bioEl=card.querySelector('.bio');
+      document.getElementById('bioModalBio').textContent = bioEl ? (bioEl.getAttribute('data-full')||bioEl.textContent) : '';
+      modal.hidden=false;
+      document.body.style.overflow='hidden';
+      modal.querySelector('.bio-modal-close').focus();
+    }
+    function close(){
+      modal.hidden=true;
+      document.body.style.overflow='';
+      if(lastFocus&&lastFocus.focus)lastFocus.focus();
+    }
+    function pslot_clear(el){while(el.firstChild)el.removeChild(el.firstChild);}
+    function textOf(card,sel){var e=card.querySelector(sel);return e?e.textContent.trim():'';}
+    function setText(id,v){document.getElementById(id).textContent=v;}
+    function setLine(id,v){var e=document.getElementById(id);e.textContent=v;e.style.display=v?'':'none';}
+
+    document.addEventListener('click',function(e){
+      var rm=e.target.closest?e.target.closest('.read-more'):null;
+      if(rm){var card=rm.closest('.staff-card');if(card)open(card);return;}
+      if(e.target.hasAttribute&&e.target.hasAttribute('data-close'))close();
+    });
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!modal.hidden)close();});
+    modal.addEventListener('keydown',function(e){
+      if(e.key!=='Tab')return;
+      var f=modal.querySelectorAll('button');
+      if(!f.length)return;
+      var first=f[0],last=f[f.length-1];
+      if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+      else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+    });
+
+    window.__processStaffCards(); // process the baked fallback cards on load
   })();
 </script>
 </body>

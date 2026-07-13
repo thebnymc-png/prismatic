@@ -91,6 +91,23 @@
   .img-card .cap p{font-size:.82rem;color:var(--muted)}
 
   /* Save bar */
+  .txt-group{margin-bottom:22px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+  .txt-group-title{font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);background:#faf8fc;padding:10px 16px;border-bottom:1px solid var(--line)}
+  .txt-field{padding:12px 16px;border-bottom:1px solid #f1edf6}
+  .txt-field:last-child{border-bottom:none}
+  .row-item{display:grid;grid-template-columns:40px 1fr auto;gap:14px;align-items:start;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+  .row-idx{font-family:var(--mono);font-size:.9rem;color:var(--muted);padding-top:8px}
+  .row-fields{display:grid;gap:8px}
+  .row-actions{display:flex;flex-direction:column;gap:6px;align-items:stretch}
+  .area-row{display:flex;gap:10px;margin-bottom:8px}
+  .area-row input{flex:1}
+  .stats-panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px;color:var(--muted)}
+  .stat-total{display:flex;align-items:baseline;gap:12px}
+  .stat-num{font-family:var(--display);font-weight:700;font-size:2.6rem;color:var(--ink);line-height:1}
+  .stat-label{font-size:.95rem;color:var(--muted)}
+  .stat-recent{margin-top:18px;border-top:1px solid var(--line);padding-top:16px}
+  .stat-recent-title{font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .stat-row{font-size:.9rem;color:var(--ink-2,#333);padding:3px 0}
   .savebar{position:sticky;bottom:0;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-top:1px solid var(--line);
     padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 -24px;border-radius:0}
   .savebar .msg{font-size:.9rem;color:var(--muted)}
@@ -132,6 +149,13 @@
 
   <main>
     <section class="block">
+      <div class="eyebrow">Copy</div>
+      <h2>Site text</h2>
+      <p class="sub">Edit the words across the page. The crisis support lines are verified and locked — they aren't editable here.</p>
+      <div id="cmsText"></div>
+    </section>
+
+    <section class="block">
       <div class="eyebrow">Team</div>
       <h2>Staff members</h2>
       <p class="sub">Add, edit, reorder or remove the people shown on the site. Photos are cropped square automatically.</p>
@@ -140,10 +164,33 @@
     </section>
 
     <section class="block">
+      <div class="eyebrow">What we offer</div>
+      <h2>Support cards</h2>
+      <p class="sub">The numbered cards under "Supports shaped around you".</p>
+      <div id="cmsCards"></div>
+      <button class="btn btn-ghost" id="addCard">+ Add card</button>
+    </section>
+
+    <section class="block">
+      <div class="eyebrow">Where we work</div>
+      <h2>Service areas</h2>
+      <p class="sub">The suburbs listed under "Across South East Queensland".</p>
+      <div id="cmsAreas"></div>
+      <button class="btn btn-ghost" id="addArea">+ Add area</button>
+    </section>
+
+    <section class="block">
       <div class="eyebrow">Imagery</div>
       <h2>Site photos</h2>
       <p class="sub">Replace the two main photographs on the site. The prism and logo are brand marks and stay fixed.</p>
       <div class="imgs" id="imgList"></div>
+    </section>
+
+    <section class="block">
+      <div class="eyebrow">Enquiries</div>
+      <h2>Contact form</h2>
+      <p class="sub">How many enquiries have come through the site. Message contents are never stored here — they go straight to your inbox.</p>
+      <div id="cmsStats" class="stats-panel">Loading…</div>
     </section>
   </main>
 
@@ -164,7 +211,70 @@ const IMG_SLOTS = [
   ["community","Belonging band","The group photo behind “Open to everyone.”"],
   ["handshake","Approach section","The rainbow-light handshake photo."]
 ];
-let state = { staff: [], images: {} };
+
+// Editable copy, grouped by page section. type: 'line' (input) or 'area' (textarea).
+// rich fields accept *asterisks* to highlight a word and new lines for line breaks.
+const TEXT_GROUPS = [
+  ["Hero", [
+    ["hero.eyebrow","Eyebrow","line"],["hero.headline","Headline","line",true],
+    ["hero.lead","Intro paragraph","area"],["hero.chip1","Badge 1","line"],["hero.chip2","Badge 2","line"]]],
+  ["Approach", [
+    ["approach.eyebrow","Eyebrow","line"],["approach.heading","Heading","line",true],
+    ["approach.p1","Paragraph 1","area"],["approach.p2","Paragraph 2","area"],["approach.pull","Pull quote","area"]]],
+  ["Supports", [
+    ["supports.eyebrow","Eyebrow","line"],["supports.heading","Heading","line"],["supports.intro","Intro","area"],
+    ["hours.big","Hours number","line"],["hours.heading","Hours heading","line"],["hours.body","Hours text","area"]]],
+  ["Belonging", [
+    ["community.eyebrow","Eyebrow","line"],["community.heading","Heading","line",true],
+    ["community.p1","Paragraph 1","area"],["community.p2","Paragraph 2","area"]]],
+  ["Areas", [
+    ["areas.eyebrow","Eyebrow","line"],["areas.heading","Heading","line"],["areas.lede","Intro","area"]]],
+  ["Team", [
+    ["team.eyebrow","Eyebrow","line"],["team.heading","Heading","line"],["team.intro","Intro","area"]]],
+  ["Apply", [
+    ["apply.eyebrow","Eyebrow","line"],["apply.heading","Heading","line",true],
+    ["apply.big","Headline line","line"],["apply.svc","Sub line","line"]]],
+  ["Contact", [
+    ["contact.eyebrow","Eyebrow","line"],["contact.heading","Heading","line"],["contact.intro","Intro","area"]]],
+];
+const DEFAULT_TEXT = {
+  "hero.eyebrow":"NDIS supports across South East Queensland",
+  "hero.headline":"Specialised care\non the *spectrum.*",
+  "hero.lead":"We support people with physical and mental disabilities. Our supports are LGBTQIASB+ affirming, and they're open to everyone, whether you're part of the community or not.",
+  "hero.chip1":"Taking new participants","hero.chip2":"2 hours or 20, both welcome",
+  "approach.eyebrow":"Our approach","approach.heading":"Not just here for the *good times.*",
+  "approach.p1":"Plenty of providers will tell you why they're the best. We're not going to do that. We'll show up, do the work, and let you judge for yourself.",
+  "approach.p2":"Real support means being there on the hard days too, not only the easy ones. We're realistic about what that looks like, and we'd rather be honest with you than polished at you.",
+  "approach.pull":"We can't promise we're the best. We can promise we'll try our hardest, and that the care is real.",
+  "supports.eyebrow":"What we offer","supports.heading":"Supports shaped around you",
+  "supports.intro":"Everyday help delivered with respect and consistency. We support people living with physical disability, mental health conditions, and both together.",
+  "hours.big":"2 – 20","hours.heading":"Hours a week. Either is fine.",
+  "hours.body":"Whether you need as little as two hours a week or as many as twenty, we'll work with you. The goal is to actually assist you in the way you need, not to fill a roster.",
+  "community.eyebrow":"A space of belonging","community.heading":"Open to *everyone.*",
+  "community.p1":"We support people with physical disabilities and mental health conditions alike. Our supports are LGBTQIASB+ affirming, and you do not have to be part of the community to be welcome here.",
+  "community.p2":"When a space is built to be safe for the people too often left out, it becomes a genuinely welcoming space for all.",
+  "areas.eyebrow":"Where we work","areas.heading":"Across South East Queensland",
+  "areas.lede":"From Toowoomba and the Lockyer Valley through Ipswich to greater Brisbane. Local support, close to home. Not sure if we reach you? Just ask.",
+  "team.eyebrow":"Our team","team.heading":"The people you'll actually meet",
+  "team.intro":"Support works when it's built on a relationship. Here's who you'll be working with.",
+  "apply.eyebrow":"Now taking new participants","apply.heading":"We're ready\nwhen you are.",
+  "apply.big":"Capacity available for new participants.","apply.svc":"Daily living, cleaning, community access and more.",
+  "contact.eyebrow":"Get in touch","contact.heading":"Let's build support that fits your life.",
+  "contact.intro":"Send us a message and we'll get back to you. Prefer to apply straight away? You can do that too.",
+};
+const DEFAULT_CARDS = [
+  ["Daily living & personal care","Dignified, hands-on support with the routines of daily life, at your pace and on your terms."],
+  ["Getting out & making friends","Socialising, meeting people and building a circle. We'll come along, help with the organising, and take the pressure out of showing up."],
+  ["Hobbies & new interests","Trying something new is easier with company. We'll help you find it, book it, get there, and do it without the hassle of going it alone."],
+  ["Cleaning & household tasks","Keeping your space comfortable and cared for, so home always feels like somewhere you can relax."],
+  ["Community access","Appointments, shopping, work, study or a day out. Practical help to stay connected to the world around you."],
+  ["Capacity building","Practical skill-building toward greater independence, from cooking and budgeting to navigating services."],
+  ["Supported independent living","Reliable in-home support that helps you live more independently, with the right help always close by."],
+  ["Transport & access","Getting where you need to be, safely, on time, and without the stress of working out how."]
+].map(c=>({title:c[0],body:c[1]}));
+const DEFAULT_AREAS = ["Brisbane Area","Ipswich","Toowoomba","Pittsworth","Ripley","Redbank","Gatton","Laidley","Plainland","Regency Downs","Acacia Ridge"];
+
+let state = { text: {}, supportCards: [], areas: [], staff: [], images: {} };
 let dirty = false;
 
 const $ = s => document.querySelector(s);
@@ -197,8 +307,79 @@ async function enterApp(){
   $('#loginView').classList.add('hidden');
   $('#appView').classList.remove('hidden');
   const {data} = await api('/api/content');
-  state = { staff: Array.isArray(data?.staff)?data.staff:[], images: data?.images||{} };
-  renderStaff(); renderImages(); setDirty(false);
+  state = {
+    text: (data && data.text) ? data.text : {},
+    supportCards: (data && Array.isArray(data.supportCards) && data.supportCards.length) ? data.supportCards : DEFAULT_CARDS.map(c=>({...c})),
+    areas: (data && Array.isArray(data.areas) && data.areas.length) ? data.areas.slice() : DEFAULT_AREAS.slice(),
+    staff: Array.isArray(data?.staff)?data.staff:[],
+    images: data?.images||{}
+  };
+  renderText(); renderStaff(); renderCards(); renderAreas(); renderImages(); loadStats(); setDirty(false);
+}
+
+// ---------- site text ----------
+function textVal(key){ return (key in state.text) ? state.text[key] : (DEFAULT_TEXT[key]||''); }
+function renderText(){
+  const wrap=$('#cmsText'); wrap.innerHTML='';
+  TEXT_GROUPS.forEach(g=>{
+    const grp=el('div',{class:'txt-group'}, el('div',{class:'txt-group-title'}, g[0]));
+    g[1].forEach(f=>{
+      const [key,label,type,rich]=f;
+      let input;
+      if(type==='area'){ input=el('textarea',{oninput:e=>{state.text[key]=e.target.value;setDirty(true);}}); input.value=textVal(key); }
+      else { input=el('input',{type:'text',value:textVal(key),oninput:e=>{state.text[key]=e.target.value;setDirty(true);}}); }
+      const lab=el('label',{}, label + (rich?'  (use *word* to highlight, Enter for a line break)':''));
+      grp.append(el('div',{class:'txt-field'}, lab, input));
+    });
+    wrap.append(grp);
+  });
+}
+
+// ---------- support cards ----------
+function renderCards(){
+  const list=$('#cmsCards'); list.innerHTML='';
+  state.supportCards.forEach((c,i)=>{
+    const t=el('input',{type:'text',value:esc(c.title),placeholder:'Title',oninput:e=>{state.supportCards[i].title=e.target.value;setDirty(true);}});
+    const b=el('textarea',{placeholder:'Description',oninput:e=>{state.supportCards[i].body=e.target.value;setDirty(true);}}); b.value=esc(c.body);
+    const del=el('button',{type:'button',class:'btn btn-danger',style:'padding:7px 12px;font-size:.82rem',onclick:()=>{state.supportCards.splice(i,1);setDirty(true);renderCards();}},'Remove');
+    const up=el('button',{type:'button',class:'up-btn',disabled:i===0?'':null,onclick:()=>{[state.supportCards[i-1],state.supportCards[i]]=[state.supportCards[i],state.supportCards[i-1]];setDirty(true);renderCards();}},'↑');
+    const dn=el('button',{type:'button',class:'up-btn',disabled:i===state.supportCards.length-1?'':null,onclick:()=>{[state.supportCards[i+1],state.supportCards[i]]=[state.supportCards[i],state.supportCards[i+1]];setDirty(true);renderCards();}},'↓');
+    list.append(el('div',{class:'row-item'},
+      el('div',{class:'row-idx'}, ('0'+(i+1)).slice(-2)),
+      el('div',{class:'row-fields'}, t, b),
+      el('div',{class:'row-actions'}, up, dn, del)));
+  });
+}
+$('#addCard').addEventListener('click',()=>{state.supportCards.push({title:'',body:''});setDirty(true);renderCards();});
+
+// ---------- service areas ----------
+function renderAreas(){
+  const list=$('#cmsAreas'); list.innerHTML='';
+  state.areas.forEach((a,i)=>{
+    const inp=el('input',{type:'text',value:esc(a),placeholder:'Suburb',oninput:e=>{state.areas[i]=e.target.value;setDirty(true);}});
+    const del=el('button',{type:'button',class:'btn btn-danger',style:'padding:7px 12px;font-size:.82rem',onclick:()=>{state.areas.splice(i,1);setDirty(true);renderAreas();}},'Remove');
+    list.append(el('div',{class:'area-row'}, inp, del));
+  });
+}
+$('#addArea').addEventListener('click',()=>{state.areas.push('');setDirty(true);renderAreas();window.scrollTo({top:document.body.scrollHeight});});
+
+// ---------- enquiry stats ----------
+async function loadStats(){
+  const box=$('#cmsStats');
+  const {status,data}=await api('/api/stats');
+  if(status!==200||!data){ box.textContent='Sign in to view enquiry totals.'; return; }
+  const recent=(data.recent||[]).map(t=>new Date(t));
+  box.innerHTML='';
+  box.append(el('div',{class:'stat-total'}, el('span',{class:'stat-num'}, String(data.total||0)), el('span',{class:'stat-label'}, (data.total===1?'enquiry':'enquiries')+' received')));
+  if(recent.length){
+    const list=el('div',{class:'stat-recent'}, el('div',{class:'stat-recent-title'},'Recent'));
+    recent.slice(0,8).forEach(d=>{
+      list.append(el('div',{class:'stat-row'}, d.toLocaleDateString('en-AU',{day:'numeric',month:'short'}) + ', ' + d.toLocaleTimeString('en-AU',{hour:'numeric',minute:'2-digit'})));
+    });
+    box.append(list);
+  } else {
+    box.append(el('div',{class:'stat-recent'},'No enquiries yet.'));
+  }
 }
 
 // ---------- staff ----------
@@ -310,7 +491,11 @@ $('#saveBtn').addEventListener('click', async ()=>{
   const btn=$('#saveBtn'); btn.disabled=true; btn.textContent='Saving…';
   const {status,data}=await api('/api/content',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify(state)});
   btn.textContent='Save changes';
-  if(status===200){ state={staff:data.content.staff,images:data.content.images}; renderStaff(); renderImages(); setDirty(false); toast('Saved. The live site is updated.'); }
+  if(status===200){
+    const c=data.content;
+    state={ text:c.text||{}, supportCards:(c.supportCards&&c.supportCards.length)?c.supportCards:state.supportCards, areas:(c.areas&&c.areas.length)?c.areas:state.areas, staff:c.staff, images:c.images };
+    renderText(); renderStaff(); renderCards(); renderAreas(); renderImages(); setDirty(false); toast('Saved. The live site is updated.');
+  }
   else if(status===401){ toast('Session expired. Please sign in again.'); setTimeout(()=>location.reload(),1200); }
   else { btn.disabled=false; toast(data?.error||'Save failed'); }
 });

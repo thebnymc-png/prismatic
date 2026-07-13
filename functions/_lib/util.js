@@ -18,6 +18,20 @@ export const ALLOWED_COLORS = new Set([
 ]);
 
 export const IMAGE_SLOTS = new Set(["community", "handshake"]);
+
+// Editable copy keys with max lengths. Anything not in here is ignored on save,
+// so the client can only edit approved fields. Crisis lines are NOT here (locked).
+export const ALLOWED_TEXT = {
+  "hero.eyebrow": 90, "hero.headline": 80, "hero.lead": 320, "hero.chip1": 40, "hero.chip2": 40,
+  "approach.eyebrow": 40, "approach.heading": 80, "approach.p1": 400, "approach.p2": 400, "approach.pull": 260,
+  "supports.eyebrow": 40, "supports.heading": 80, "supports.intro": 320,
+  "hours.big": 16, "hours.heading": 60, "hours.body": 320,
+  "community.eyebrow": 40, "community.heading": 60, "community.p1": 400, "community.p2": 320,
+  "areas.eyebrow": 40, "areas.heading": 80, "areas.lede": 320,
+  "team.eyebrow": 40, "team.heading": 80, "team.intro": 260,
+  "apply.eyebrow": 60, "apply.heading": 60, "apply.big": 120, "apply.svc": 160,
+  "contact.eyebrow": 40, "contact.heading": 90, "contact.intro": 240,
+};
 const MEDIA_KEY_RE = /^[a-f0-9]{8,}\.(jpg|jpeg|png|webp)$/i;
 
 export function json(data, init = {}) {
@@ -100,7 +114,33 @@ const clip = (v, n) => (typeof v === "string" ? v.slice(0, n) : "");
 const mediaKey = (v) => (typeof v === "string" && MEDIA_KEY_RE.test(v) ? v : "");
 
 export function sanitizeContent(input) {
-  const out = { staff: [], images: {} };
+  const out = { text: {}, supportCards: [], areas: [], staff: [], images: {} };
+
+  // Editable copy: only approved keys, each length-capped. Newlines allowed;
+  // other control characters stripped.
+  const text = input?.text || {};
+  for (const key in ALLOWED_TEXT) {
+    if (typeof text[key] === "string") {
+      const v = text[key].replace(/[\u0000-\u0009\u000B-\u001F]/g, "").slice(0, ALLOWED_TEXT[key]);
+      if (v.trim()) out.text[key] = v;
+    }
+  }
+
+  // Support cards: up to 12, each title + body.
+  const cards = Array.isArray(input?.supportCards) ? input.supportCards.slice(0, 12) : [];
+  for (const c of cards) {
+    const title = clip(c?.title, 60).trim();
+    if (!title) continue;
+    out.supportCards.push({ title, body: clip(c?.body, 260).trim() });
+  }
+
+  // Service areas: up to 30 short names.
+  const areas = Array.isArray(input?.areas) ? input.areas.slice(0, 30) : [];
+  for (const a of areas) {
+    const name = clip(a, 40).trim();
+    if (name) out.areas.push(name);
+  }
+
   const staff = Array.isArray(input?.staff) ? input.staff.slice(0, 24) : [];
   for (const s of staff) {
     const name = clip(s?.name, 60).trim();
@@ -110,7 +150,7 @@ export function sanitizeContent(input) {
       name,
       pronouns: clip(s?.pronouns, 40).trim(),
       role: clip(s?.role, 60).trim(),
-      bio: clip(s?.bio, 400).trim(),
+      bio: clip(s?.bio, 600).trim(),
       color: ALLOWED_COLORS.has(s?.color) ? s.color : "#131019",
       photo: mediaKey(s?.photo),
     });
@@ -130,5 +170,6 @@ export function seedContent() {
       { id: "elijah", name: "Elijah", pronouns: "", role: "", bio: "", color: "#131019", photo: "" },
     ],
     images: {},
+    text: {}, supportCards: [], areas: [],
   };
 }

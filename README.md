@@ -22,6 +22,28 @@ Layout, logo and the prism are fixed. Alvin edits content, not structure.
   (HttpOnly, Secure, SameSite=Strict, 8 hour expiry). Failed logins are rate
   limited per IP.
 
+## What Alvin can edit at /admin
+- Site text: every section's copy (hero, approach, supports, hours, belonging, areas, team, apply, contact). Headings marked "highlight" accept *asterisks* around a word to colour it, and a new line becomes a line break.
+- Support cards: add, edit, reorder, remove the numbered "what we offer" cards.
+- Service areas: add, edit, remove the suburb list.
+- Staff: add, edit, reorder, remove (photo, name, pronouns, role, bio, hover highlight colour).
+- Site photos: the two main photographs.
+- Enquiries: a read-only count of contact-form submissions (with recent timestamps).
+
+The crisis support lines are verified and LOCKED — they are not editable in the panel.
+
+## Contact form + enquiry counter
+The form posts to /api/contact, which forwards the enquiry to Web3Forms (email) and
+increments a counter in KV. Only a total and timestamps are stored — no names, emails
+or messages are kept on our side (privacy-safe for an NDIS provider). The count shows
+in the admin panel. The Web3Forms key is read from the form, or set WEB3FORMS_KEY as a
+Pages secret to keep it out of the HTML.
+
+## Analytics
+Use Cloudflare Web Analytics (free, no cookies). Easiest: enable Web Analytics for the
+site in the Cloudflare dashboard (auto-injects, no code). Or paste your token into the
+commented beacon snippet near the end of public/index.html and uncomment it.
+
 ## Deploy (Git-connected Pages)
 Repo layout: static site in `public/`, Functions in `functions/` at the repo root.
 The Functions folder sits OUTSIDE `public/` so Pages runs it instead of serving it as text.
