@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Prismatic Care — Admin</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --spectrum:linear-gradient(100deg,#7B2FF7,#D6249F 22%,#FB5343 42%,#FF9A1F 58%,#2FBE5B 74%,#1FA2E0 88%,#3B5BDB);
+    --ink:#131019;--ink-2:#1c1826;--paper:#fdfcfb;--line:#e2dcea;--muted:#6f6880;
+    --display:"Bricolage Grotesque",system-ui,sans-serif;--body:"Inter",system-ui,sans-serif;--mono:"Space Mono",monospace;
+  }
+  *{margin:0;box-sizing:border-box}
+  body{font-family:var(--body);background:#f4f1f8;color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .mono{font-family:var(--mono)}
+  button{font-family:var(--body);cursor:pointer;border:none}
+  .btn{font-weight:600;font-size:.94rem;padding:11px 20px;border-radius:10px;display:inline-flex;align-items:center;gap:.5em;transition:transform .15s,box-shadow .2s,background .2s}
+  .btn-primary{background:var(--ink);color:#fff}
+  .btn-primary:hover{transform:translateY(-1px)}
+  .btn-spectrum{background:var(--spectrum);color:#fff}
+  .btn-spectrum:hover{transform:translateY(-1px);box-shadow:0 8px 22px -10px rgba(123,47,247,.6)}
+  .btn-ghost{background:#fff;border:1.5px solid var(--line)}
+  .btn-ghost:hover{border-color:var(--ink)}
+  .btn-danger{background:#fff;border:1.5px solid #eec7c2;color:#b23120}
+  .btn-danger:hover{background:#fdeeeb}
+  .btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+  /* Login */
+  .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+    background:radial-gradient(700px 400px at 70% 20%,rgba(123,47,247,.14),transparent 60%),#131019}
+  .login{background:#fff;border-radius:20px;padding:44px 40px;width:100%;max-width:400px;box-shadow:0 40px 80px -40px rgba(0,0,0,.6)}
+  .login .mark{height:40px;margin:0 auto 26px;display:block}
+  .login h1{font-family:var(--display);font-weight:700;font-size:1.5rem;text-align:center;letter-spacing:-.01em}
+  .login p{text-align:center;color:var(--muted);font-size:.94rem;margin:8px 0 26px}
+  .login input{width:100%;padding:14px 16px;border:1.5px solid var(--line);border-radius:12px;font-size:1.1rem;text-align:center;letter-spacing:.1em;font-family:var(--mono)}
+  .login input:focus{outline:none;border-color:#7B2FF7}
+  .login .btn{width:100%;justify-content:center;margin-top:16px;padding:14px}
+  .err{color:#b23120;font-size:.9rem;text-align:center;margin-top:14px;min-height:1.2em}
+
+  /* App shell */
+  .hidden{display:none !important}
+  header.bar{background:var(--ink);color:#fff;padding:16px 0}
+  .bar .in{max-width:960px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .bar img{height:26px}
+  .bar .right{display:flex;align-items:center;gap:14px}
+  .bar a.view{color:rgba(255,255,255,.75);font-size:.9rem;text-decoration:none}
+  .bar a.view:hover{color:#fff}
+  main{max-width:960px;margin:0 auto;padding:34px 24px 80px}
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.7em;margin-bottom:14px}
+  .eyebrow::before{content:"";width:22px;height:2px;border-radius:2px;background:var(--spectrum)}
+  section.block{margin-bottom:44px}
+  section.block > h2{font-family:var(--display);font-weight:700;font-size:1.5rem;letter-spacing:-.01em;margin-bottom:6px}
+  section.block > .sub{color:var(--muted);font-size:.95rem;margin-bottom:22px}
+
+  /* Staff editor */
+  .staff-item{--accent:#131019;background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:16px;display:grid;grid-template-columns:112px 1fr;gap:20px;transition:border-color .2s,box-shadow .2s}
+  .staff-item:hover{border-color:var(--accent);box-shadow:0 14px 30px -18px color-mix(in srgb, var(--accent) 55%, transparent)}
+  .photo-slot{width:112px;height:112px;border-radius:14px;overflow:hidden;background:linear-gradient(135deg,#efe9f7,#e6f1fa);position:relative;display:flex;align-items:center;justify-content:center}
+  .photo-slot img{width:100%;height:100%;object-fit:cover}
+  .photo-slot .ph{font-family:var(--mono);font-size:.62rem;color:#9a90ad;letter-spacing:.1em;text-align:center;padding:0 8px}
+  .photo-slot.busy::after{content:"";position:absolute;inset:0;background:rgba(255,255,255,.6) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="%237B2FF7" stroke-width="3" stroke-dasharray="42" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="0.8s" repeatCount="indefinite"/></circle></svg>') center/28px no-repeat}
+  .fields{display:grid;gap:12px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  label{display:block;font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+  input[type=text],textarea{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;font-family:var(--body);font-size:.96rem;background:#fff}
+  input[type=text]:focus,textarea:focus{outline:none;border-color:#7B2FF7}
+  textarea{resize:vertical;min-height:64px}
+  .staff-actions{grid-column:1/-1;display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:14px;margin-top:2px}
+  .staff-actions .spacer{flex:1}
+  .up-btn{background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:8px 12px;font-size:.85rem}
+  .up-btn:hover{border-color:var(--ink)}
+  .swatches{display:flex;gap:8px;flex-wrap:wrap}
+  .sw{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;box-shadow:0 0 0 1.5px var(--line)}
+  .sw[aria-pressed=true]{border-color:#fff;box-shadow:0 0 0 2px var(--ink)}
+  .file-btn{position:relative;overflow:hidden}
+  .file-btn input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0}
+
+  /* Site images */
+  .imgs{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .img-card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .img-card .prev{aspect-ratio:16/10;background:#eee;position:relative;overflow:hidden}
+  .img-card .prev img{width:100%;height:100%;object-fit:cover}
+  .img-card .cap{padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .img-card h3{font-family:var(--display);font-weight:600;font-size:1.05rem}
+  .img-card .cap p{font-size:.82rem;color:var(--muted)}
+
+  /* Save bar */
+  .savebar{position:sticky;bottom:0;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-top:1px solid var(--line);
+    padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 -24px;border-radius:0}
+  .savebar .msg{font-size:.9rem;color:var(--muted)}
+  .savebar .msg.good{color:#1e7d3e;font-weight:600}
+  .savebar .msg.bad{color:#b23120;font-weight:600}
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 22px;border-radius:999px;font-size:.92rem;opacity:0;transition:.25s;pointer-events:none;z-index:100}
+  .toast.show{opacity:1;transform:translateX(-50%)}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginView">
+  <form class="login" id="loginForm">
+    <svg class="mark" viewBox="0 0 40 38" aria-hidden="true">
+      <polygon points="2,5 8,5 20,35" fill="#7B2FF7"/><polygon points="8,5 14,5 20,35" fill="#D6249F"/>
+      <polygon points="14,5 20,5 20,35" fill="#FB5343"/><polygon points="20,5 26,5 20,35" fill="#FF9A1F"/>
+      <polygon points="26,5 32,5 20,35" fill="#2FBE5B"/><polygon points="32,5 38,5 20,35" fill="#1FA2E0"/>
+    </svg>
+    <h1>Prismatic Care</h1>
+    <p>Enter your admin PIN to continue.</p>
+    <input id="pin" type="password" inputmode="numeric" autocomplete="current-password" placeholder="••••••" aria-label="Admin PIN">
+    <button class="btn btn-spectrum" type="submit" id="loginBtn">Sign in</button>
+    <div class="err" id="loginErr"></div>
+  </form>
+</div>
+
+<!-- APP -->
+<div id="appView" class="hidden">
+  <header class="bar">
+    <div class="in">
+      <img src="/assets/logo-white.png" alt="Prismatic Care">
+      <div class="right">
+        <a class="view" href="/" target="_blank" rel="noopener">View site ↗</a>
+        <button class="btn btn-ghost" id="logoutBtn" style="padding:8px 16px;background:transparent;border-color:rgba(255,255,255,.3);color:#fff">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="block">
+      <div class="eyebrow">Team</div>
+      <h2>Staff members</h2>
+      <p class="sub">Add, edit, reorder or remove the people shown on the site. Photos are cropped square automatically.</p>
+      <div id="staffList"></div>
+      <button class="btn btn-ghost" id="addStaff">+ Add staff member</button>
+    </section>
+
+    <section class="block">
+      <div class="eyebrow">Imagery</div>
+      <h2>Site photos</h2>
+      <p class="sub">Replace the two main photographs on the site. The prism and logo are brand marks and stay fixed.</p>
+      <div class="imgs" id="imgList"></div>
+    </section>
+  </main>
+
+  <div class="savebar">
+    <span class="msg" id="saveMsg">No unsaved changes.</span>
+    <button class="btn btn-spectrum" id="saveBtn" disabled>Save changes</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const COLORS = [
+  ["Violet","#7B2FF7"],["Magenta","#D6249F"],["Coral","#FB5343"],["Amber","#FF9A1F"],
+  ["Green","#2FBE5B"],["Blue","#1FA2E0"],["Indigo","#3B5BDB"],["Neutral","#131019"]
+];
+const IMG_SLOTS = [
+  ["community","Belonging band","The group photo behind “Open to everyone.”"],
+  ["handshake","Approach section","The rainbow-light handshake photo."]
+];
+let state = { staff: [], images: {} };
+let dirty = false;
+
+const $ = s => document.querySelector(s);
+const el = (t,a={},...kids)=>{const n=document.createElement(t);for(const k in a){if(k==='class')n.className=a[k];else if(k.startsWith('on'))n.addEventListener(k.slice(2),a[k]);else n.setAttribute(k,a[k]);}for(const c of kids)n.append(c);return n;};
+const esc = s => (s||"");
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+function setDirty(v){dirty=v;$('#saveBtn').disabled=!v;const m=$('#saveMsg');m.className='msg'+(v?'':'');m.textContent=v?'You have unsaved changes.':'All changes saved.';}
+function mediaURL(key){return key?('/api/media/'+key):null;}
+
+// ---------- API ----------
+async function api(path, opts={}){
+  const r = await fetch(path, {credentials:'same-origin', ...opts});
+  let data=null; try{data=await r.json();}catch{}
+  return {status:r.status, data};
+}
+
+// ---------- login ----------
+$('#loginForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const btn=$('#loginBtn'), err=$('#loginErr');
+  err.textContent=''; btn.disabled=true; btn.textContent='Signing in…';
+  const {status,data} = await api('/api/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({pin:$('#pin').value})});
+  btn.disabled=false; btn.textContent='Sign in';
+  if(status===200){ enterApp(); }
+  else { err.textContent = data?.error || 'Sign in failed.'; $('#pin').value=''; $('#pin').focus(); }
+});
+$('#logoutBtn').addEventListener('click', async ()=>{ await api('/api/logout',{method:'POST'}); location.reload(); });
+
+async function enterApp(){
+  $('#loginView').classList.add('hidden');
+  $('#appView').classList.remove('hidden');
+  const {data} = await api('/api/content');
+  state = { staff: Array.isArray(data?.staff)?data.staff:[], images: data?.images||{} };
+  renderStaff(); renderImages(); setDirty(false);
+}
+
+// ---------- staff ----------
+function renderStaff(){
+  const list = $('#staffList'); list.innerHTML='';
+  state.staff.forEach((s,i)=>list.append(staffCard(s,i)));
+}
+function staffCard(s,i){
+  const photo = el('div',{class:'photo-slot'});
+  if(s.photo) photo.append(el('img',{src:mediaURL(s.photo),alt:''}));
+  else photo.append(el('div',{class:'ph'},'No photo'));
+
+  const fileBtn = el('label',{class:'btn btn-ghost file-btn',style:'padding:8px 14px;font-size:.85rem'},'Upload photo',
+    el('input',{type:'file',accept:'image/*',onchange:e=>uploadStaffPhoto(e,i,photo)}));
+
+  const swatches = el('div',{class:'swatches'});
+  COLORS.forEach(([name,hex])=>{
+    const b=el('button',{type:'button',class:'sw','aria-label':name,'aria-pressed':String(s.color===hex),style:`background:${hex}`,
+      onclick:()=>{state.staff[i].color=hex;setDirty(true);renderStaff();}});
+    swatches.append(b);
+  });
+
+  const nameIn = el('input',{type:'text',value:esc(s.name),placeholder:'Name',oninput:e=>{state.staff[i].name=e.target.value;setDirty(true);}});
+  const pronIn = el('input',{type:'text',value:esc(s.pronouns),placeholder:'they/them',oninput:e=>{state.staff[i].pronouns=e.target.value;setDirty(true);}});
+  const roleIn = el('input',{type:'text',value:esc(s.role),placeholder:'Role',oninput:e=>{state.staff[i].role=e.target.value;setDirty(true);}});
+  const bioIn  = el('textarea',{placeholder:'Short bio',oninput:e=>{state.staff[i].bio=e.target.value;setDirty(true);}}); bioIn.value=esc(s.bio);
+
+  const fields = el('div',{class:'fields'},
+    el('div',{class:'row2'}, el('div',{},el('label',{},'Name'),nameIn), el('div',{},el('label',{},'Pronouns'),pronIn)),
+    el('div',{}, el('label',{},'Role'), roleIn),
+    el('div',{}, el('label',{},'Bio'), bioIn),
+    el('div',{}, el('label',{},'Highlight colour (card hover)'), swatches)
+  );
+
+  const actions = el('div',{class:'staff-actions'},
+    fileBtn,
+    el('button',{type:'button',class:'up-btn',disabled:i===0?'':null,onclick:()=>move(i,-1)},'↑ Up'),
+    el('button',{type:'button',class:'up-btn',disabled:i===state.staff.length-1?'':null,onclick:()=>move(i,1)},'↓ Down'),
+    el('div',{class:'spacer'}),
+    el('button',{type:'button',class:'btn btn-danger',style:'padding:8px 14px;font-size:.85rem',onclick:()=>{ if(confirm('Remove '+(s.name||'this member')+'?')){state.staff.splice(i,1);setDirty(true);renderStaff();} }},'Remove')
+  );
+
+  return el('div',{class:'staff-item',style:'--accent:'+(s.color||'#131019')}, photo, fields, actions);
+}
+function move(i,d){const j=i+d;if(j<0||j>=state.staff.length)return;[state.staff[i],state.staff[j]]=[state.staff[j],state.staff[i]];setDirty(true);renderStaff();}
+$('#addStaff').addEventListener('click',()=>{state.staff.push({id:'',name:'',pronouns:'',role:'',bio:'',color:'#131019',photo:''});setDirty(true);renderStaff();
+  window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});});
+
+// ---------- site images ----------
+function renderImages(){
+  const list=$('#imgList'); list.innerHTML='';
+  IMG_SLOTS.forEach(([slot,title,desc])=>{
+    const prev=el('div',{class:'prev'});
+    const key=state.images[slot];
+    prev.append(el('img',{src: key?mediaURL(key):('/assets/'+(slot==='community'?'community.jpg':'handshake.jpg')),alt:''}));
+    const fileBtn=el('label',{class:'btn btn-ghost file-btn',style:'padding:8px 14px;font-size:.85rem'},'Replace',
+      el('input',{type:'file',accept:'image/*',onchange:e=>uploadSiteImage(e,slot,prev)}));
+    list.append(el('div',{class:'img-card'}, prev,
+      el('div',{class:'cap'}, el('div',{}, el('h3',{},title), el('p',{},desc)), fileBtn)));
+  });
+}
+
+// ---------- image resize + upload ----------
+function resizeToBlob(file, targetW, targetH, cover){
+  return new Promise((resolve,reject)=>{
+    const img=new Image(); const url=URL.createObjectURL(file);
+    img.onload=()=>{
+      URL.revokeObjectURL(url);
+      let cw=targetW, ch=targetH;
+      if(!cover){ // fit within, keep aspect
+        const r=Math.min(targetW/img.width,targetH/img.height,1);
+        cw=Math.round(img.width*r); ch=Math.round(img.height*r);
+      }
+      const c=document.createElement('canvas'); c.width=cw; c.height=ch;
+      const ctx=c.getContext('2d');
+      if(cover){
+        const r=Math.max(cw/img.width,ch/img.height);
+        const w=img.width*r,h=img.height*r;
+        ctx.drawImage(img,(cw-w)/2,(ch-h)/2,w,h);
+      } else ctx.drawImage(img,0,0,cw,ch);
+      c.toBlob(b=>b?resolve(b):reject(new Error('encode failed')),'image/jpeg',0.85);
+    };
+    img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('Not a valid image'));};
+    img.src=url;
+  });
+}
+async function doUpload(blob){
+  const {status,data}=await api('/api/upload',{method:'POST',headers:{'content-type':'image/jpeg'},body:blob});
+  if(status!==200||!data?.key) throw new Error(data?.error||'Upload failed');
+  return data.key;
+}
+async function uploadStaffPhoto(e,i,slotEl){
+  const file=e.target.files[0]; e.target.value=''; if(!file)return;
+  slotEl.classList.add('busy');
+  try{ const blob=await resizeToBlob(file,800,800,true); const key=await doUpload(blob);
+    state.staff[i].photo=key; setDirty(true); renderStaff();
+  }catch(err){ toast(err.message); slotEl.classList.remove('busy'); }
+}
+async function uploadSiteImage(e,slot,prevEl){
+  const file=e.target.files[0]; e.target.value=''; if(!file)return;
+  prevEl.classList.add('busy');
+  try{ const blob=await resizeToBlob(file,1600,1600,false); const key=await doUpload(blob);
+    state.images[slot]=key; setDirty(true); renderImages();
+  }catch(err){ toast(err.message); prevEl.classList.remove('busy'); }
+}
+
+// ---------- save ----------
+$('#saveBtn').addEventListener('click', async ()=>{
+  const btn=$('#saveBtn'); btn.disabled=true; btn.textContent='Saving…';
+  const {status,data}=await api('/api/content',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify(state)});
+  btn.textContent='Save changes';
+  if(status===200){ state={staff:data.content.staff,images:data.content.images}; renderStaff(); renderImages(); setDirty(false); toast('Saved. The live site is updated.'); }
+  else if(status===401){ toast('Session expired. Please sign in again.'); setTimeout(()=>location.reload(),1200); }
+  else { btn.disabled=false; toast(data?.error||'Save failed'); }
+});
+window.addEventListener('beforeunload',e=>{ if(dirty){e.preventDefault();e.returnValue='';} });
+
+// If already signed in (valid cookie), content PUT would work; probe by loading app.
+// We attempt to show the app only after a successful login; a returning user with a
+// live cookie can still use Save. To auto-skip login, try a lightweight check:
+(async ()=>{
+  // no-op: login is always shown first for clarity; cookie still authorises saves.
+})();
+</script>
+</body>
+</html>

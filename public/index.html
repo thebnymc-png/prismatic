@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prismatic Care · Specialised NDIS care on the spectrum</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="description" content="Prismatic Care is an LGBTQIASB+ affirming NDIS support provider across South East Queensland. Supporting physical and mental disabilities. Open to everyone. Apply online today.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --violet:#7B2FF7;--magenta:#D6249F;--coral:#FB5343;--amber:#FF9A1F;
+    --green:#2FBE5B;--blue:#1FA2E0;--indigo:#3B5BDB;
+    --spectrum:linear-gradient(100deg,var(--violet),var(--magenta) 22%,var(--coral) 42%,var(--amber) 58%,var(--green) 74%,var(--blue) 88%,var(--indigo));
+    --ink:#131019;--ink-soft:#4c4658;--ink-faint:#6f6880;
+    --paper:#fdfcfb;--panel:#f3eff8;--line:#e2dcea;--card:#ffffff;
+    --display:"Bricolage Grotesque",system-ui,sans-serif;
+    --body:"Inter",system-ui,sans-serif;--mono:"Space Mono",ui-monospace,monospace;
+    --maxw:1140px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  [hidden]{display:none !important}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--body);color:var(--ink);background:var(--paper);font-size:1.0625rem;line-height:1.72;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+
+  .skip{position:absolute;left:-9999px;top:0;background:#fff;color:#131019;padding:14px 20px;z-index:200;border-radius:0 0 10px 0;font-weight:600}
+  .skip:focus{left:0}
+
+  .eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);display:inline-flex;align-items:center;gap:.7em}
+  .eyebrow::before{content:"";width:26px;height:2px;border-radius:2px;background:var(--spectrum);flex:none}
+
+  .btn{font-family:var(--body);font-weight:600;font-size:.96rem;padding:13px 24px;border-radius:999px;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:.5em;transition:transform .18s ease,box-shadow .2s ease,background .2s,border-color .2s;white-space:nowrap}
+  .btn-primary{background:var(--ink);color:var(--paper)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 26px -12px rgba(19,16,25,.7)}
+  .btn-spectrum{background:var(--spectrum);color:#fff;box-shadow:0 8px 24px -10px rgba(123,47,247,.6)}
+  .btn-spectrum:hover{transform:translateY(-2px);box-shadow:0 14px 34px -10px rgba(123,47,247,.75)}
+  .btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+  .btn-ghost:hover{border-color:var(--ink)}
+  .btn-ghost-light{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.32)}
+  .btn-ghost-light:hover{border-color:#fff;background:rgba(255,255,255,.08)}
+
+  /* Header */
+  header{position:sticky;top:0;z-index:50;background:rgba(19,16,25,.85);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.08)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:78px;gap:20px}
+  .brand img{height:34px;width:auto}
+  .nav-links{display:flex;align-items:center;gap:26px}
+  .nav-links a{font-size:.94rem;color:rgba(255,255,255,.82);font-weight:500;transition:color .2s}
+  .nav-links a:hover{color:#fff}
+  .menu-toggle{display:none}
+
+  /* Listen bar */
+  .listen{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.06);color:#fff;border-radius:999px;padding:9px 16px;font-size:.86rem;font-weight:600;cursor:pointer;font-family:var(--body);transition:background .2s}
+  .listen:hover{background:rgba(255,255,255,.14)}
+  .listen svg{width:16px;height:16px;flex:none}
+  .listen[hidden]{display:none}
+  .listen-stop{margin-left:6px}
+
+  /* Hero */
+  .hero{position:relative;background:radial-gradient(1200px 600px at 78% 18%,rgba(123,47,247,.2),transparent 60%),radial-gradient(900px 500px at 12% 90%,rgba(31,162,224,.13),transparent 55%),var(--ink);color:#fff;padding:74px 0 88px;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:34px;align-items:center}
+  .hero h1{font-family:var(--display);font-weight:800;font-size:clamp(2.6rem,5.6vw,4.4rem);line-height:1.03;letter-spacing:-.03em;margin:22px 0 20px}
+  .hero h1 .spec{background:var(--spectrum);-webkit-background-clip:text;background-clip:text;color:transparent;font-style:italic}
+  .hero p.lead{font-size:1.18rem;color:rgba(255,255,255,.8);max-width:36ch;margin-bottom:30px}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+  .hero-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+  .chip{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:7px 14px}
+  .chip .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(47,190,91,.22);flex:none}
+  .hero-art{position:relative;display:flex;align-items:center;justify-content:center}
+  .hero-art svg{width:100%;height:auto;max-width:500px;overflow:visible}
+  .beam{transform-origin:251.29px 247.86px}
+  @media (prefers-reduced-motion:no-preference){
+    .diamond-img{animation:pop .8s cubic-bezier(.2,.8,.2,1) .05s both}
+    .beam{animation:fan 1s cubic-bezier(.2,.7,.2,1) both}
+    .beam:nth-child(1){animation-delay:.18s}.beam:nth-child(2){animation-delay:.24s}
+    .beam:nth-child(3){animation-delay:.30s}.beam:nth-child(4){animation-delay:.36s}
+    .beam:nth-child(5){animation-delay:.42s}.beam:nth-child(6){animation-delay:.48s}
+    .beam:nth-child(7){animation-delay:.54s}
+  }
+  @keyframes fan{from{opacity:0;transform:scale(.12)}to{opacity:1;transform:none}}
+  @keyframes pop{from{opacity:0;transform:scale(.72) translateY(-8px)}to{opacity:1;transform:none}}
+
+  /* Sections */
+  .section{padding:96px 0}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+  .split .media{border-radius:22px;overflow:hidden;box-shadow:0 30px 60px -34px rgba(19,16,25,.45)}
+  .split .media img{width:100%;height:100%;object-fit:cover;aspect-ratio:4/5}
+  .split h2,.section-head h2{font-family:var(--display);font-weight:700;font-size:clamp(1.9rem,3.8vw,2.9rem);line-height:1.08;letter-spacing:-.02em;margin:16px 0 18px}
+  .split h2 em{font-style:italic;background:var(--spectrum);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .split p{color:var(--ink-soft);font-size:1.1rem}
+  .split p+p{margin-top:16px}
+  .pull{font-family:var(--display);font-weight:600;font-size:1.3rem;line-height:1.35;color:var(--ink);border-left:4px solid transparent;border-image:var(--spectrum) 1;padding-left:20px;margin:26px 0 0}
+
+  .section-head{max-width:640px;margin-bottom:50px}
+  .section-head p{color:var(--ink-soft);font-size:1.1rem;margin-top:16px}
+
+  /* Cards */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .care-card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:30px 28px 34px;position:relative;overflow:hidden;transition:transform .22s ease,box-shadow .22s ease,border-color .22s}
+  .care-card::before{content:"";position:absolute;left:0;top:0;height:4px;width:100%;background:var(--spectrum);opacity:0;transition:opacity .25s}
+  .care-card:hover{transform:translateY(-5px);box-shadow:0 22px 44px -26px rgba(19,16,25,.35);border-color:transparent}
+  .care-card:hover::before{opacity:1}
+  .care-card .idx{font-family:var(--mono);font-size:.74rem;color:var(--ink-faint);letter-spacing:.1em}
+  .care-card h3{font-family:var(--display);font-weight:600;font-size:1.26rem;margin:16px 0 10px;letter-spacing:-.01em}
+  .care-card p{color:var(--ink-soft);font-size:1rem}
+
+  /* Hours block */
+  .hours{background:var(--panel);border-radius:24px;padding:44px 46px;margin-top:48px;display:grid;grid-template-columns:auto 1fr;gap:34px;align-items:center}
+  .hours .big{font-family:var(--display);font-weight:800;font-size:clamp(2.4rem,5vw,3.4rem);line-height:1;letter-spacing:-.03em;background:var(--spectrum);-webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap}
+  .hours h3{font-family:var(--display);font-weight:700;font-size:1.5rem;letter-spacing:-.01em;margin-bottom:8px}
+  .hours p{color:var(--ink-soft);font-size:1.06rem}
+
+  /* Band */
+  .band{position:relative;color:#fff;padding:118px 0;text-align:center;overflow:hidden}
+  .band img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%}
+  .band .veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(19,16,25,.66),rgba(19,16,25,.82))}
+  .band .inner{position:relative;z-index:1;max-width:780px;margin:0 auto}
+  .band .eyebrow{color:rgba(255,255,255,.86);justify-content:center}
+  .band h2{font-family:var(--display);font-weight:700;font-size:clamp(2rem,4.4vw,3.2rem);line-height:1.08;letter-spacing:-.02em;margin:16px 0 18px}
+  .band h2 em{font-style:italic;background:var(--spectrum);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .band p{color:rgba(255,255,255,.9);font-size:1.16rem;max-width:56ch;margin:0 auto 18px}
+  .band .btn-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+
+  /* Areas */
+  .areas{background:var(--panel)}
+  .areas .wrap{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:start}
+  .areas h2{font-family:var(--display);font-weight:700;font-size:clamp(1.9rem,4vw,2.9rem);line-height:1.06;letter-spacing:-.02em;margin-top:16px}
+  .areas .lede{color:var(--ink-soft);font-size:1.1rem;margin-top:16px;max-width:38ch}
+  .area-list{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .area{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px 22px;display:flex;align-items:center;gap:13px;transition:background .2s,transform .2s,border-color .2s}
+  .area:hover{background:#fff;transform:translateY(-2px);border-color:#cfc6dd}
+  .area .pin{font-size:.8rem;color:var(--violet);flex:none}
+  .area b{font-weight:600}
+  .area .state{margin-left:auto;font-family:var(--mono);font-size:.66rem;color:var(--ink-faint);letter-spacing:.1em}
+
+  /* Staff */
+  .staff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .staff-card{--accent:#131019;background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;transition:transform .22s,box-shadow .22s,border-color .22s}
+  .staff-card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 22px 44px -22px color-mix(in srgb, var(--accent) 55%, transparent), 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent)}
+  .staff-photo{aspect-ratio:1/1;background:linear-gradient(135deg,#efe9f7,#e6f1fa);display:flex;align-items:center;justify-content:center}
+  .staff-photo svg{width:34%;height:auto;opacity:.4}
+  .staff-body{padding:24px 24px 28px}
+  .staff-body h3{font-family:var(--display);font-weight:600;font-size:1.2rem;letter-spacing:-.01em}
+  .staff-body .pronouns{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--violet);margin-top:5px}
+  .staff-body .role{font-size:.95rem;color:var(--ink-faint);margin-top:2px}
+  .staff-body p{color:var(--ink-soft);font-size:.98rem;margin-top:12px}
+
+  /* Apply */
+  .apply{position:relative;padding:100px 0;overflow:hidden;background:
+    radial-gradient(600px 400px at 15% 30%,rgba(123,47,247,.16),transparent 60%),
+    radial-gradient(600px 400px at 85% 25%,rgba(31,162,224,.16),transparent 60%),
+    radial-gradient(700px 500px at 70% 90%,rgba(214,36,159,.13),transparent 60%),
+    linear-gradient(120deg,#f5f0fb,#eef6fc 55%,#fdf0f7)}
+  .apply .inner{max-width:660px}
+  .apply h2{font-family:var(--display);font-weight:800;font-size:clamp(2.2rem,5vw,3.4rem);line-height:1.02;letter-spacing:-.03em}
+  .apply p.big{font-size:1.24rem;margin-top:16px}
+  .apply .svc{font-size:1.02rem;color:var(--ink-soft);margin:18px 0 30px}
+  .apply .btn-spectrum{font-size:1.02rem;padding:16px 32px}
+  .apply .price-link{display:block;margin-top:24px;font-size:.98rem;color:var(--ink-soft)}
+  .apply .price-link a{font-weight:600;color:var(--violet);text-decoration:underline;text-underline-offset:3px}
+
+  /* Resources */
+  .resources{background:var(--ink);color:#fff;padding:100px 0}
+  .resources .section-head h2{color:#fff}
+  .resources .section-head p{color:rgba(255,255,255,.78)}
+  .resources .eyebrow{color:rgba(255,255,255,.8)}
+  .emergency{display:flex;align-items:center;gap:20px;background:rgba(251,83,67,.14);border:1.5px solid rgba(251,83,67,.5);border-radius:18px;padding:24px 28px;margin-bottom:34px}
+  .emergency .num{font-family:var(--display);font-weight:800;font-size:2.2rem;letter-spacing:-.02em;color:#ff8b7d;line-height:1;flex:none}
+  .emergency p{color:rgba(255,255,255,.9);font-size:1.04rem}
+  .res-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .res{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);border-radius:18px;padding:24px 26px;transition:background .2s,transform .2s,border-color .2s}
+  .res:hover{background:rgba(255,255,255,.09);transform:translateY(-3px);border-color:rgba(255,255,255,.28)}
+  .res .top{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  .res h3{font-family:var(--display);font-weight:600;font-size:1.16rem;letter-spacing:-.01em}
+  .res .tel{font-family:var(--mono);font-weight:700;font-size:1.02rem;color:#fff;white-space:nowrap}
+  .res .tel:hover{text-decoration:underline}
+  .res .when{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:#a89fb8;margin-top:8px}
+  .res p{color:rgba(255,255,255,.76);font-size:.97rem;margin-top:10px}
+  .res .more{display:inline-block;margin-top:12px;font-size:.9rem;font-weight:600;color:#c9a6ff;text-decoration:underline;text-underline-offset:3px}
+  .res-note{color:rgba(255,255,255,.6);font-size:.92rem;margin-top:28px;max-width:70ch}
+
+  /* Contact */
+  .contact-card{background:var(--ink);color:var(--paper);border-radius:28px;padding:60px 54px;position:relative;overflow:hidden}
+  .contact-card::after{content:"";position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;background:var(--spectrum);filter:blur(90px);opacity:.5;pointer-events:none}
+  .contact-card .inner{position:relative;z-index:1}
+  .contact-card h2{font-family:var(--display);font-weight:700;font-size:clamp(2rem,4vw,3rem);letter-spacing:-.02em;line-height:1.05;max-width:16ch}
+  .contact-card p{color:#cfc8da;margin-top:16px;font-size:1.08rem;max-width:44ch}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:46px;align-items:start}
+  .contact-methods{display:flex;flex-direction:column;gap:12px;margin-top:32px}
+  .method{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:15px 20px;transition:background .2s,transform .2s}
+  .method:hover{background:rgba(255,255,255,.12);transform:translateY(-3px)}
+  .method .ico{width:40px;height:40px;border-radius:11px;background:var(--spectrum);display:flex;align-items:center;justify-content:center;flex:none}
+  .method .ico svg{width:20px;height:20px}
+  .method .label{font-family:var(--mono);font-size:.64rem;letter-spacing:.15em;text-transform:uppercase;color:#bdb5cb;display:block}
+  .method .val{font-weight:600;font-size:1rem;margin-top:2px;display:block}
+  .contact-apply{margin-top:26px}
+
+  .hp{position:absolute;left:-9999px}
+  .form-stack{position:relative}
+  #contactForm{transition:opacity .38s ease,filter .38s ease}
+  .form-stack.done #contactForm{opacity:0;filter:blur(2px);pointer-events:none}
+  .form-panel{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:28px}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:#bdb5cb;margin-bottom:7px}
+  .field input,.field select,.field textarea{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:12px 14px;color:#fff;font-family:var(--body);font-size:1rem;transition:border-color .2s,background .2s}
+  .field input::placeholder,.field textarea::placeholder{color:rgba(255,255,255,.45)}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:#b98cff;background:rgba(255,255,255,.11)}
+  .field textarea{resize:vertical;min-height:112px}
+  .field select{appearance:none;-webkit-appearance:none;cursor:pointer;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23bdb5cb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>');background-repeat:no-repeat;background-position:right 14px center}
+  .field select option{color:#131019}
+  .form-panel .btn-spectrum{width:100%;justify-content:center;margin-top:6px;font-size:1rem;padding:14px}
+  .form-consent{font-size:.84rem;color:#a49cb2;margin-top:12px;line-height:1.55}
+  /* Success: overlays the form, same footprint, fades in */
+  .form-status{
+    position:absolute;inset:0;z-index:2;
+    display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;text-align:center;
+    background:rgba(24,20,32,.9);backdrop-filter:blur(8px);
+    border:1.5px solid rgba(47,190,91,.55);border-radius:20px;padding:32px 28px;
+    color:#eafff0;font-size:1rem;
+    opacity:0;transform:scale(.97);pointer-events:none;
+    transition:opacity .42s ease,transform .42s ease;
+  }
+  .form-status.show{opacity:1;transform:none;pointer-events:auto}
+  .form-status .tick{width:52px;height:52px;border-radius:50%;background:rgba(47,190,91,.18);border:1.5px solid rgba(47,190,91,.6);display:flex;align-items:center;justify-content:center;flex:none}
+  .form-status .tick svg{width:26px;height:26px;stroke:#5ee089}
+  .form-status strong{font-family:var(--display);font-weight:700;font-size:1.2rem;letter-spacing:-.01em;display:block;margin-bottom:6px}
+  .form-status p{color:#c6d8cc;font-size:.98rem;margin:0;max-width:34ch}
+  /* Error: sits inline under the form so it can be retried */
+  .form-status.err{
+    position:relative;inset:auto;z-index:auto;margin-top:14px;
+    flex-direction:row;text-align:left;align-items:flex-start;gap:13px;justify-content:flex-start;
+    background:rgba(251,83,67,.14);border-color:rgba(251,83,67,.5);backdrop-filter:none;
+    color:#ffe9e6;padding:22px;opacity:1;transform:none;pointer-events:auto;
+  }
+  .form-status.err .tick{display:none}
+  .form-status.err p{color:#ffd9d4;max-width:none}
+  @media (prefers-reduced-motion:reduce){
+    .form-status,#contactForm{transition:none}
+    .form-status{transform:none}
+  }
+
+  /* Footer */
+  footer{background:var(--ink);color:#fff;padding:52px 0;border-top:1px solid rgba(255,255,255,.08)}
+  .foot{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+  .foot img{height:30px}
+  .foot .socials{display:flex;gap:10px}
+  .foot .socials a{width:40px;height:40px;border-radius:11px;border:1px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s}
+  .foot .socials a:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.4)}
+  .foot .socials svg{width:19px;height:19px}
+  .foot small{color:rgba(255,255,255,.6);font-size:.88rem}
+  .foot .tag{font-family:var(--mono);font-size:.72rem;color:rgba(255,255,255,.62);letter-spacing:.08em}
+  .foot-credit{margin-top:30px;padding-top:22px;border-top:1px solid rgba(255,255,255,.08);text-align:center}
+  .foot-credit a{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;color:rgba(255,255,255,.5);text-decoration:none;display:inline-flex;align-items:center;gap:.6em;transition:color .2s}
+  .foot-credit a::before{content:"";width:16px;height:2px;border-radius:2px;background:var(--spectrum);opacity:.7;transition:opacity .2s}
+  .foot-credit a:hover{color:#fff}
+  .foot-credit a:hover::before{opacity:1}
+
+  /* Responsive */
+  @media (max-width:980px){
+    .hero-grid{grid-template-columns:1fr;gap:6px}
+    .hero-art{order:-1;margin-bottom:6px}
+    .hero-art svg{max-width:330px}
+    .split{grid-template-columns:1fr;gap:30px}
+    .split .media{order:-1}
+    .split .media img{aspect-ratio:16/11}
+    .cards,.staff-grid{grid-template-columns:1fr 1fr}
+    .areas .wrap{grid-template-columns:1fr;gap:32px}
+    .contact-grid{grid-template-columns:1fr;gap:34px}
+    .res-grid{grid-template-columns:1fr}
+    .hours{grid-template-columns:1fr;gap:16px;text-align:left}
+    .nav-links{display:none}
+    .nav-links.open{display:flex;position:absolute;top:78px;left:0;right:0;flex-direction:column;gap:0;background:var(--ink);border-bottom:1px solid rgba(255,255,255,.1);padding:8px 0;align-items:stretch}
+    .nav-links.open a{padding:14px 28px;width:100%}
+    .nav-links.open .btn{margin:12px 28px;justify-content:center}
+    .menu-toggle{display:flex;background:none;border:none;cursor:pointer;padding:8px;flex-direction:column;gap:5px}
+    .menu-toggle span{width:22px;height:2px;background:#fff;border-radius:2px}
+  }
+  @media (max-width:600px){
+    .wrap{padding:0 20px}
+    .cards,.staff-grid{grid-template-columns:1fr}
+    .area-list{grid-template-columns:1fr}
+    .contact-card{padding:40px 24px}
+    .section{padding:70px 0}.band{padding:88px 0}.apply,.resources{padding:78px 0}
+    .form-row{grid-template-columns:1fr}
+    .hours{padding:32px 26px}
+    .emergency{flex-direction:column;align-items:flex-start;gap:12px}
+  }
+  :focus-visible{outline:3px solid #9a5cff;outline-offset:3px;border-radius:4px}
+  .resources :focus-visible,.hero :focus-visible,header :focus-visible,footer :focus-visible{outline-color:#c9a6ff}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- ===== Header ===== -->
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top" aria-label="Prismatic Care home">
+      <img src="/assets/logo-white.png" alt="Prismatic Care">
+    </a>
+    <nav class="nav-links" id="navlinks">
+      <a href="#approach">Our approach</a>
+      <a href="#supports">Supports</a>
+      <a href="#areas">Where we work</a>
+      <a href="#team">Our team</a>
+      <a href="#resources">Support lines</a>
+      <a href="#contact">Contact</a>
+      <a href="https://www.jotform.com/form/260211704799055" target="_blank" rel="noopener" class="btn btn-spectrum">Apply here</a>
+    </nav>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+<!-- ===== Hero ===== -->
+<section class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow" style="color:rgba(255,255,255,.85)">NDIS supports across South East Queensland</span>
+      <h1>Specialised care<br>on the <span class="spec">spectrum.</span></h1>
+      <p class="lead" data-read>We support people with physical and mental disabilities. Our supports are LGBTQIASB+ affirming, and they're open to everyone, whether you're part of the community or not.</p>
+      <div class="hero-cta">
+        <a href="https://www.jotform.com/form/260211704799055" target="_blank" rel="noopener" class="btn btn-spectrum">Apply here</a>
+        <a href="tel:0460586201" class="btn btn-ghost-light">Call 0460 586 201</a>
+        <button class="listen" id="listenBtn" hidden aria-live="polite">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a9 9 0 0 1 0 14"/></svg>
+          <span id="listenLabel">Listen to this page</span>
+        </button>
+        <button class="listen listen-stop" id="stopBtn" hidden>Stop</button>
+      </div>
+      <div class="hero-chips">
+        <span class="chip"><span class="dot"></span>Taking new participants</span>
+        <span class="chip">2 hours or 20, both welcome</span>
+      </div>
+    </div>
+
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 520 520">
+        <defs>
+          <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="7"/></filter>
+          <linearGradient id="beamgrad0" gradientUnits="userSpaceOnUse" x1="251.3" y1="247.9" x2="47.3" y2="385.4"><stop offset="0" stop-color="#7B2FF7" stop-opacity="0.9"/><stop offset="0.45" stop-color="#7B2FF7" stop-opacity="0.45"/><stop offset="1" stop-color="#7B2FF7" stop-opacity="0"/></linearGradient>
+          <linearGradient id="beamgrad1" gradientUnits="userSpaceOnUse" x1="251.3" y1="247.9" x2="102.1" y2="443.5"><stop offset="0" stop-color="#D6249F" stop-opacity="0.9"/><stop offset="0.45" stop-color="#D6249F" stop-opacity="0.45"/><stop offset="1" stop-color="#D6249F" stop-opacity="0"/></linearGradient>
+          <linearGradient id="beamgrad2" gradientUnits="userSpaceOnUse" x1="251.3" y1="247.9" x2="172.6" y2="480.9"><stop offset="0" stop-color="#FB5343" stop-opacity="0.9"/><stop offset="0.45" stop-color="#FB5343" stop-opacity="0.45"/><stop offset="1" stop-color="#FB5343" stop-opacity="0"/></linearGradient>
+          <linearGradient id="beamgrad3" gradientUnits="userSpaceOnUse" x1="251.3" y1="247.9" x2="251.3" y2="493.9"><stop offset="0" stop-color="#FF9A1F" stop-opacity="0.9"/><stop offset="0.45" stop-color="#FF9A1F" stop-opacity="0.45"/><stop offset="1" stop-color="#FF9A1F" stop-opacity="0"/></linearGradient>
+          <linearGradient id="beamgrad4" gradientUnits="userSpaceOnUse" x1="251.3" y1="247.9" x2="330.0" y2="480.9"><stop offset="0" stop-color="#2FBE5B" stop-opacity="0.9"/><stop offset="0.45" stop-color="#2FBE5B" stop-opacity="0.45"/><stop offset="1" stop-color="#2FBE5B" stop-opacity="0"/></linearGradient>
+          <linearGradient id="beamgrad5" gradientUnits="userSpaceOnUse" x1="251.3" y1="247.9" x2="400.5" y2="443.5"><stop offset="0" stop-color="#1FA2E0" stop-opacity="0.9"/><stop offset="0.45" stop-color="#1FA2E0" stop-opacity="0.45"/><stop offset="1" stop-color="#1FA2E0" stop-opacity="0"/></linearGradient>
+          <linearGradient id="beamgrad6" gradientUnits="userSpaceOnUse" x1="251.3" y1="247.9" x2="455.2" y2="385.4"><stop offset="0" stop-color="#3B5BDB" stop-opacity="0.9"/><stop offset="0.45" stop-color="#3B5BDB" stop-opacity="0.45"/><stop offset="1" stop-color="#3B5BDB" stop-opacity="0"/></linearGradient>
+        </defs>
+        <g filter="url(#soft)">
+          <polygon class="beam" points="252.7,249.9 249.9,245.8 40.1,374.6 54.6,396.2" fill="url(#beamgrad0)"/>
+          <polygon class="beam" points="253.3,249.4 249.3,246.3 91.8,435.6 112.4,451.3" fill="url(#beamgrad1)"/>
+          <polygon class="beam" points="253.7,248.7 248.9,247.1 160.2,476.8 184.9,485.1" fill="url(#beamgrad2)"/>
+          <polygon class="beam" points="253.8,247.9 248.8,247.9 238.3,493.9 264.3,493.9" fill="url(#beamgrad3)"/>
+          <polygon class="beam" points="253.7,247.1 248.9,248.7 317.7,485.1 342.3,476.8" fill="url(#beamgrad4)"/>
+          <polygon class="beam" points="253.3,246.3 249.3,249.4 390.1,451.3 410.8,435.6" fill="url(#beamgrad5)"/>
+          <polygon class="beam" points="252.7,245.8 249.9,249.9 448.0,396.2 462.5,374.6" fill="url(#beamgrad6)"/>
+        </g>
+        <image class="diamond-img" href="/assets/diamond.png" x="150" y="54" width="220"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Approach ===== -->
+<section class="section" id="approach">
+  <div class="wrap split">
+    <div class="media"><img id="site-handshake" src="/assets/handshake.jpg" alt="Two people shaking hands, lit by refracted rainbow light" loading="lazy"></div>
+    <div>
+      <span class="eyebrow">Our approach</span>
+      <h2>Not just here for the <em>good times.</em></h2>
+      <p data-read>Plenty of providers will tell you why they're the best. We're not going to do that. We'll show up, do the work, and let you judge for yourself.</p>
+      <p data-read>Real support means being there on the hard days too, not only the easy ones. We're realistic about what that looks like, and we'd rather be honest with you than polished at you.</p>
+      <p class="pull" data-read>We can't promise we're the best. We can promise we'll try our hardest, and that the care is real.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Supports ===== -->
+<section class="section" id="supports" style="padding-top:0">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">What we offer</span>
+      <h2>Supports shaped around you</h2>
+      <p data-read>Everyday help delivered with respect and consistency. We support people living with physical disability, mental health conditions, and both together.</p>
+    </div>
+    <div class="cards">
+      <article class="care-card"><div class="idx">01</div><h3>Daily living &amp; personal care</h3><p data-read>Dignified, hands-on support with the routines of daily life, at your pace and on your terms.</p></article>
+      <article class="care-card"><div class="idx">02</div><h3>Getting out &amp; making friends</h3><p data-read>Socialising, meeting people and building a circle. We'll come along, help with the organising, and take the pressure out of showing up.</p></article>
+      <article class="care-card"><div class="idx">03</div><h3>Hobbies &amp; new interests</h3><p data-read>Trying something new is easier with company. We'll help you find it, book it, get there, and do it without the hassle of going it alone.</p></article>
+      <article class="care-card"><div class="idx">04</div><h3>Cleaning &amp; household tasks</h3><p data-read>Keeping your space comfortable and cared for, so home always feels like somewhere you can relax.</p></article>
+      <article class="care-card"><div class="idx">05</div><h3>Community access</h3><p data-read>Appointments, shopping, work, study or a day out. Practical help to stay connected to the world around you.</p></article>
+      <article class="care-card"><div class="idx">06</div><h3>Capacity building</h3><p data-read>Practical skill-building toward greater independence, from cooking and budgeting to navigating services.</p></article>
+      <article class="care-card"><div class="idx">07</div><h3>Supported independent living</h3><p data-read>Reliable in-home support that helps you live more independently, with the right help always close by.</p></article>
+      <article class="care-card"><div class="idx">08</div><h3>Transport &amp; access</h3><p data-read>Getting where you need to be, safely, on time, and without the stress of working out how.</p></article>
+    </div>
+
+    <div class="hours">
+      <div class="big">2 &ndash; 20</div>
+      <div>
+        <h3>Hours a week. Either is fine.</h3>
+        <p data-read>Whether you need as little as two hours a week or as many as twenty, we'll work with you. The goal is to actually assist you in the way you need, not to fill a roster.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Belonging band ===== -->
+<section class="band">
+  <img id="site-community" class="bg" src="/assets/community.jpg" alt="A diverse group of people smiling together outdoors, including wheelchair users and an assistance dog" loading="lazy">
+  <div class="veil"></div>
+  <div class="wrap inner">
+    <span class="eyebrow">A space of belonging</span>
+    <h2>Open to <em>everyone.</em></h2>
+    <p data-read>We support people with physical disabilities and mental health conditions alike. Our supports are LGBTQIASB+ affirming, and you do not have to be part of the community to be welcome here.</p>
+    <p data-read>When a space is built to be safe for the people too often left out, it becomes a genuinely welcoming space for all.</p>
+    <div class="btn-row">
+      <a href="https://www.jotform.com/form/260211704799055" target="_blank" rel="noopener" class="btn btn-spectrum">Apply here</a>
+      <a href="#contact" class="btn btn-ghost-light">Talk to us</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Areas ===== -->
+<section class="section areas" id="areas">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">Where we work</span>
+      <h2>Across South East Queensland</h2>
+      <p class="lede" data-read>From Toowoomba and the Lockyer Valley through Ipswich to greater Brisbane. Local support, close to home. Not sure if we reach you? Just ask.</p>
+      <a href="#contact" class="btn btn-primary" style="margin-top:26px">Check availability</a>
+    </div>
+    <div class="area-list">
+      <div class="area"><span class="pin">&#9670;</span><b>Brisbane Area</b><span class="state">QLD</span></div>
+      <div class="area"><span class="pin">&#9670;</span><b>Ipswich</b><span class="state">QLD</span></div>
+      <div class="area"><span class="pin">&#9670;</span><b>Toowoomba</b><span class="state">QLD</span></div>
+      <div class="area"><span class="pin">&#9670;</span><b>Pittsworth</b><span class="state">QLD</span></div>
+      <div class="area"><span class="pin">&#9670;</span><b>Ripley</b><span class="state">QLD</span></div>
+      <div class="area"><span class="pin">&#9670;</span><b>Redbank</b><span class="state">QLD</span></div>
+      <div class="area"><span class="pin">&#9670;</span><b>Gatton</b><span class="state">QLD</span></div>
+      <div class="area"><span class="pin">&#9670;</span><b>Laidley</b><span class="state">QLD</span></div>
+      <div class="area"><span class="pin">&#9670;</span><b>Plainland</b><span class="state">QLD</span></div>
+      <div class="area"><span class="pin">&#9670;</span><b>Regency Downs</b><span class="state">QLD</span></div>
+      <div class="area"><span class="pin">&#9670;</span><b>Acacia Ridge</b><span class="state">QLD</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Team =====
+     PLACEHOLDER SECTION. Replace each card with real photo, name, pronouns, role and bio.
+     Photos: drop into /assets/team/ and swap the .staff-photo div for:
+       <div class="staff-photo"><img src="/assets/team/name.jpg" alt="Portrait of [Name]"></div>
+     Delete any cards you don't need; the grid reflows automatically. -->
+<section class="section" id="team">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Our team</span>
+      <h2>The people you'll actually meet</h2>
+      <p data-read>Support works when it's built on a relationship. Here's who you'll be working with.</p>
+    </div>
+    <div class="staff-grid" id="staffGrid">
+      <article class="staff-card" style="--accent:#7B2FF7">
+        <div class="staff-photo"><svg viewBox="0 0 24 24" fill="none" stroke="#7B2FF7" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>
+        <div class="staff-body">
+          <h3>Alvin</h3>
+          <div class="pronouns">Pronouns to come</div>
+          <div class="role">Founder</div>
+          <p>Bio coming soon.</p>
+        </div>
+      </article>
+      <article class="staff-card" style="--accent:#D6249F">
+        <div class="staff-photo"><svg viewBox="0 0 24 24" fill="none" stroke="#D6249F" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>
+        <div class="staff-body">
+          <h3>Elijah</h3>
+          <div class="pronouns">Pronouns to come</div>
+          <div class="role">Role to come</div>
+          <p>Bio coming soon.</p>
+        </div>
+      </article>
+      <article class="staff-card" style="--accent:#FB5343">
+        <div class="staff-photo"><svg viewBox="0 0 24 24" fill="none" stroke="#1FA2E0" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>
+        <div class="staff-body">
+          <h3>Team member</h3>
+          <div class="pronouns">Pronouns to come</div>
+          <div class="role">Role to come</div>
+          <p>Bio coming soon.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Apply ===== -->
+<section class="apply" id="apply">
+  <div class="wrap inner">
+    <span class="eyebrow">Now taking new participants</span>
+    <h2 style="margin-top:16px">We're ready<br>when you are.</h2>
+    <p class="big" data-read>Capacity available for new participants.</p>
+    <p class="svc" data-read>Daily living, cleaning, community access and more.</p>
+    <a href="https://www.jotform.com/form/260211704799055" target="_blank" rel="noopener" class="btn btn-spectrum">Apply now</a>
+    <span class="price-link">Want to understand what supports cost? Read the current <a href="https://www.ndis.gov.au/providers/pricing-arrangements" target="_blank" rel="noopener">NDIS Pricing Arrangements and Price Limits</a> (formerly the NDIS Price Guide) on the official NDIS website.</span>
+  </div>
+</section>
+
+<!-- ===== Resources / Support lines ===== -->
+<section class="resources" id="resources">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Help lines &amp; resources</span>
+      <h2>Support, whether or not you choose us</h2>
+      <p data-read>If you need to talk to someone right now, these services are free, confidential and staffed by trained people. You do not need to be an NDIS participant to call them.</p>
+    </div>
+
+    <div class="emergency">
+      <div class="num">000</div>
+      <p data-read><strong>In an emergency, or if life is in danger, call Triple Zero (000).</strong> Don't wait.</p>
+    </div>
+
+    <div class="res-grid">
+      <div class="res" data-read>
+        <div class="top"><h3>Lifeline</h3><a class="tel" href="tel:131114">13 11 14</a></div>
+        <div class="when">24 hours, 7 days</div>
+        <p>Crisis support and suicide prevention for anyone in Australia. You can also text 0477 13 11 14 or chat online.</p>
+        <a class="more" href="https://www.lifeline.org.au" target="_blank" rel="noopener">lifeline.org.au</a>
+      </div>
+
+      <div class="res" data-read>
+        <div class="top"><h3>13YARN</h3><a class="tel" href="tel:139276">13 92 76</a></div>
+        <div class="when">24 hours, 7 days</div>
+        <p>Crisis support run by Aboriginal and Torres Strait Islander people, for mob. A culturally safe space to yarn, without judgement or shame.</p>
+        <a class="more" href="https://www.13yarn.org.au" target="_blank" rel="noopener">13yarn.org.au</a>
+      </div>
+
+      <div class="res" data-read>
+        <div class="top"><h3>QLife</h3><a class="tel" href="tel:1800184527">1800 184 527</a></div>
+        <div class="when">3pm &ndash; 9pm, every day</div>
+        <p>Anonymous, free LGBTIQA+SB peer support and referral. Talk about sexuality, gender, bodies, feelings or relationships with someone from the community.</p>
+        <a class="more" href="https://qlife.org.au" target="_blank" rel="noopener">qlife.org.au</a>
+      </div>
+
+      <div class="res" data-read>
+        <div class="top"><h3>Beyond Blue</h3><a class="tel" href="tel:1300224636">1300 22 4636</a></div>
+        <div class="when">24 hours, 7 days</div>
+        <p>Free counselling and support for anxiety, depression and general mental health, by phone, webchat or email.</p>
+        <a class="more" href="https://www.beyondblue.org.au" target="_blank" rel="noopener">beyondblue.org.au</a>
+      </div>
+
+      <div class="res" data-read>
+        <div class="top"><h3>1800RESPECT</h3><a class="tel" href="tel:1800737732">1800 737 732</a></div>
+        <div class="when">24 hours, 7 days</div>
+        <p>National domestic, family and sexual violence counselling and support. Text 0458 737 732, or chat and video call online.</p>
+        <a class="more" href="https://1800respect.org.au" target="_blank" rel="noopener">1800respect.org.au</a>
+      </div>
+
+      <div class="res" data-read>
+        <div class="top"><h3>Blue Knot Foundation</h3><a class="tel" href="tel:1300657380">1300 657 380</a></div>
+        <div class="when">9am &ndash; 5pm, 7 days</div>
+        <p>Counselling, information and referral for adult survivors of complex trauma, childhood abuse and violence, and for the people supporting them.</p>
+        <a class="more" href="https://blueknot.org.au" target="_blank" rel="noopener">blueknot.org.au</a>
+      </div>
+
+      <div class="res" data-read>
+        <div class="top"><h3>Butterfly Foundation</h3><a class="tel" href="tel:1800334673">1800 33 4673</a></div>
+        <div class="when">8am &ndash; midnight, 7 days</div>
+        <p>Support for eating disorders and body image concerns, for you or someone you care about. This is a support line, not a crisis line. Closed on public holidays.</p>
+        <a class="more" href="https://butterfly.org.au" target="_blank" rel="noopener">butterfly.org.au</a>
+      </div>
+
+      <div class="res" data-read>
+        <div class="top"><h3>Epilepsy Queensland</h3><a class="tel" href="tel:1300852853">1300 852 853</a></div>
+        <div class="when">Mon &ndash; Fri, business hours</div>
+        <p>Information, one-to-one support and seizure management planning for Queenslanders living with epilepsy and those who support them.</p>
+        <a class="more" href="https://epilepsyqueensland.com.au" target="_blank" rel="noopener">epilepsyqueensland.com.au</a>
+      </div>
+
+      <div class="res" data-read>
+        <div class="top"><h3>NDIS</h3><a class="tel" href="tel:1800800110">1800 800 110</a></div>
+        <div class="when">Mon &ndash; Fri, 8am &ndash; 8pm</div>
+        <p>The National Disability Insurance Agency, for questions about your plan, your funding, or how to access the scheme.</p>
+        <a class="more" href="https://www.ndis.gov.au" target="_blank" rel="noopener">ndis.gov.au</a>
+      </div>
+
+      <div class="res" data-read>
+        <div class="top"><h3>Finding a counsellor</h3><a class="tel" href="tel:1800022222">1800 022 222</a></div>
+        <div class="when">24 hours, 7 days</div>
+        <p>healthdirect can help you find local health and mental health services, and talk through what kind of support might suit you. Your GP can also arrange a mental health care plan.</p>
+        <a class="more" href="https://www.healthdirect.gov.au" target="_blank" rel="noopener">healthdirect.gov.au</a>
+      </div>
+    </div>
+
+    <p class="res-note">These services are independent of Prismatic Care. Details were correct at the time of writing. Hours and phone numbers can change, so please check the service's own website if you're unsure.</p>
+  </div>
+</section>
+
+<!-- ===== Contact ===== -->
+<section class="section" id="contact">
+  <div class="wrap">
+    <div class="contact-card">
+      <div class="inner">
+        <div class="contact-grid">
+          <div class="contact-left">
+            <span class="eyebrow" style="color:#ffffff">Get in touch</span>
+            <h2 style="margin-top:16px">Let's build support that fits your life.</h2>
+            <p data-read>Send us a message and we'll get back to you. Prefer to apply straight away? You can do that too.</p>
+            <div class="contact-methods">
+              <a class="method" href="tel:0460586201">
+                <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+                <span><span class="label">Phone</span><span class="val">0460 586 201</span></span>
+              </a>
+              <a class="method" href="mailto:alvin@prismaticcare.com.au">
+                <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg></span>
+                <span><span class="label">Email</span><span class="val">alvin@prismaticcare.com.au</span></span>
+              </a>
+              <a class="method" href="https://instagram.com/prismaticcare" target="_blank" rel="noopener">
+                <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#fff" stroke="none"/></svg></span>
+                <span><span class="label">Instagram</span><span class="val">@prismaticcare</span></span>
+              </a>
+              <a class="method" href="https://www.facebook.com/prismaticcare" target="_blank" rel="noopener">
+                <span class="ico"><svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12z"/></svg></span>
+                <span><span class="label">Facebook</span><span class="val">Prismatic Care</span></span>
+              </a>
+            </div>
+            <div class="contact-apply">
+              <a href="https://www.jotform.com/form/260211704799055" target="_blank" rel="noopener" class="btn btn-spectrum">Apply as an NDIS participant</a>
+            </div>
+          </div>
+
+          <div class="contact-right">
+            <div class="form-stack" id="formStack">
+            <form class="form-panel" id="contactForm">
+              <!-- Get a free access key at https://web3forms.com (sign up with alvin@prismaticcare.com.au) and paste it below -->
+              <input type="hidden" name="access_key" value="51017794-7fbe-46fb-953a-a39fcd0d48e8">
+              <input type="hidden" name="subject" value="New enquiry from the Prismatic Care website">
+              <input type="hidden" name="from_name" value="Prismatic Care Website">
+              <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+              <div class="form-row">
+                <div class="field"><label for="cf-name">Name</label><input id="cf-name" type="text" name="name" placeholder="Your name" required></div>
+                <div class="field"><label for="cf-phone">Phone</label><input id="cf-phone" type="tel" name="phone" placeholder="Optional"></div>
+              </div>
+              <div class="field"><label for="cf-email">Email</label><input id="cf-email" type="email" name="email" placeholder="you@email.com" required></div>
+              <div class="field"><label for="cf-topic">I'm reaching out about</label>
+                <select id="cf-topic" name="enquiry_type">
+                  <option>General enquiry</option>
+                  <option>Becoming an NDIS participant</option>
+                  <option>Services &amp; availability</option>
+                  <option>Something else</option>
+                </select>
+              </div>
+              <div class="field"><label for="cf-msg">Message</label><textarea id="cf-msg" name="message" placeholder="Tell us a little about how we can help..." required></textarea></div>
+              <button type="submit" class="btn btn-spectrum">Send message</button>
+              <p class="form-consent">We'll only use your details to respond to your enquiry.</p>
+            </form>
+            <div class="form-status" id="formStatus" role="status" aria-live="polite" tabindex="-1" hidden>
+              <span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+              <div id="formStatusText">
+                <strong>Thanks, your message is on its way.</strong>
+                <p>We'll be in touch as soon as we can. Need us sooner? Call <a href="tel:0460586201" style="color:#8ee8ab;font-weight:600">0460 586 201</a>.</p>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ===== Footer ===== -->
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="#top" aria-label="Prismatic Care home"><img src="/assets/logo-white.png" alt="Prismatic Care"></a>
+    <span class="tag">Specialised care on the spectrum.</span>
+    <div class="socials">
+      <a href="https://instagram.com/prismaticcare" target="_blank" rel="noopener" aria-label="Prismatic Care on Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#fff" stroke="none"/></svg>
+      </a>
+      <a href="https://www.facebook.com/prismaticcare" target="_blank" rel="noopener" aria-label="Prismatic Care on Facebook">
+        <svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12z"/></svg>
+      </a>
+    </div>
+    <small>&copy; <span id="yr"></span> Prismatic Care &middot; South East Queensland</small>
+  </div>
+  <div class="wrap foot-credit">
+    <a href="https://bwbstudio.cc" target="_blank" rel="noopener">Developed by BWB Studio</a>
+  </div>
+</footer>
+
+<script>
+  // Mobile menu
+  var t=document.getElementById('menuToggle'),n=document.getElementById('navlinks');
+  t.addEventListener('click',function(){var o=n.classList.toggle('open');t.setAttribute('aria-expanded',o)});
+  n.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){n.classList.remove('open');t.setAttribute('aria-expanded','false')})});
+  document.getElementById('yr').textContent=new Date().getFullYear();
+
+  // Read-aloud (browser speech synthesis; no third party, no cost)
+  (function(){
+    if(!('speechSynthesis' in window))return;
+    var btn=document.getElementById('listenBtn'),stopBtn=document.getElementById('stopBtn'),label=document.getElementById('listenLabel');
+    var synth=window.speechSynthesis,speaking=false;
+
+    // Some browsers expose the API but ship no voices. Only offer the button if a voice exists.
+    function voiceCount(){try{return synth.getVoices().length}catch(e){return 0}}
+    function offerButton(){if(voiceCount()>0)btn.hidden=false}
+    offerButton();
+    if(voiceCount()===0){
+      if('onvoiceschanged' in synth)synth.onvoiceschanged=offerButton;
+      setTimeout(offerButton,1500);
+    }
+
+    function reset(){speaking=false;label.textContent='Listen to this page';stopBtn.hidden=true}
+    function fail(){
+      speaking=false;stopBtn.hidden=true;
+      label.textContent='Audio unavailable';
+      setTimeout(function(){label.textContent='Listen to this page'},2500);
+    }
+    function buildText(){
+      var parts=['Prismatic Care. Specialised care on the spectrum.'];
+      document.querySelectorAll('[data-read]').forEach(function(el){
+        // innerText respects rendered line breaks, so adjacent tags don't run together
+        var raw=(typeof el.innerText==='string'&&el.innerText)||el.textContent||'';
+        var s=raw.replace(/\s+/g,' ').trim();
+        if(s)parts.push(s);
+      });
+      return parts.join('. ').replace(/\.\s*\.\s*/g,'. ');
+    }
+    btn.addEventListener('click',function(){
+      if(speaking&&!synth.paused){synth.pause();label.textContent='Resume';return}
+      if(synth.paused){synth.resume();label.textContent='Pause';return}
+      synth.cancel();
+      var u=new SpeechSynthesisUtterance(buildText());
+      u.rate=0.98;u.pitch=1;u.lang='en-AU';
+      u.onend=reset;
+      u.onerror=function(e){if(e&&(e.error==='interrupted'||e.error==='canceled')){reset()}else{fail()}};
+      synth.speak(u);
+      speaking=true;label.textContent='Pause';stopBtn.hidden=false;
+    });
+    stopBtn.addEventListener('click',function(){synth.cancel();reset()});
+    window.addEventListener('beforeunload',function(){synth.cancel()});
+  })();
+
+  // Contact form (Web3Forms)
+  var cForm=document.getElementById('contactForm');
+  if(cForm){
+    var cStatus=document.getElementById('formStatus');
+    var cStack=document.getElementById('formStack');
+    var cText=document.getElementById('formStatusText');
+    cForm.addEventListener('submit',async function(e){
+      e.preventDefault();
+      var btn=cForm.querySelector('button[type=submit]');
+      var label=btn.textContent;
+      btn.disabled=true;btn.textContent='Sending...';
+      var payload=Object.fromEntries(new FormData(cForm).entries());
+      try{
+        var r=await fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(payload)});
+        var j=await r.json();
+        if(j.success){
+          // Overlay the form: same footprint, cross-fade, no layout jump.
+          cStatus.classList.remove('err');
+          cStatus.hidden=false;
+          // force reflow so the opacity transition actually runs
+          void cStatus.offsetWidth;
+          cStack.classList.add('done');
+          cStatus.classList.add('show');
+          cStatus.focus({preventScroll:true});
+        }else{throw new Error(j.message||'Failed');}
+      }catch(err){
+        // Error sits inline under the form so it can be read and retried.
+        cStack.classList.remove('done');
+        cStatus.classList.add('err');
+        cStatus.classList.remove('show');
+        cStatus.hidden=false;
+        cText.innerHTML="<strong>Sorry, that didn't send.</strong><p>Please email <a href='mailto:alvin@prismaticcare.com.au' style='color:#ffb3aa;font-weight:600'>alvin@prismaticcare.com.au</a> or call <a href='tel:0460586201' style='color:#ffb3aa;font-weight:600'>0460 586 201</a>.</p>";
+        btn.disabled=false;btn.textContent=label;
+      }
+    });
+  }
+
+  // Hydrate staff + site photos from the admin content API.
+  // If the API is unavailable, the baked-in HTML stays as the fallback.
+  (function(){
+    function avatar(color){return '<div class="staff-photo"><svg viewBox="0 0 24 24" fill="none" stroke="'+color+'" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>';}
+    function esc(s){var d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML;}
+    function card(s){
+      var accent=s.color||'#131019';
+      var photo=s.photo?'<div class="staff-photo"><img src="/api/media/'+encodeURIComponent(s.photo)+'" alt="Portrait of '+esc(s.name)+'"></div>':avatar(accent);
+      var pron=s.pronouns?'<div class="pronouns">'+esc(s.pronouns)+'</div>':'';
+      var role=s.role?'<div class="role">'+esc(s.role)+'</div>':'';
+      var bio=s.bio?'<p data-read>'+esc(s.bio)+'</p>':'';
+      return '<article class="staff-card" style="--accent:'+esc(accent)+'">'+photo+'<div class="staff-body"><h3>'+esc(s.name)+'</h3>'+pron+role+bio+'</div></article>';
+    }
+    fetch('/api/content',{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(data){
+      if(!data)return;
+      if(Array.isArray(data.staff)&&data.staff.length){var g=document.getElementById('staffGrid');if(g)g.innerHTML=data.staff.map(card).join('');}
+      var im=data.images||{};
+      if(im.community){var c=document.getElementById('site-community');if(c)c.src='/api/media/'+encodeURIComponent(im.community);}
+      if(im.handshake){var h=document.getElementById('site-handshake');if(h)h.src='/api/media/'+encodeURIComponent(im.handshake);}
+    }).catch(function(){});
+  })();
+</script>
+</body>
+</html>
