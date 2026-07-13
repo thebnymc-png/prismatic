@@ -7,7 +7,7 @@ pages_build_output_dir = "public"
 # serves them as static files.
 #
 # Configure in the Cloudflare dashboard (Settings > Functions) for the Git project:
-#   KV namespace binding  CONTENT  -> your KV namespace
-#   R2 bucket binding     MEDIA    -> your "prismatic-care-media" bucket
-#   Secret ADMIN_PIN       (8+ chars, give to Alvin)
-#   Secret SESSION_SECRET  (long random string)
+#   KV namespace binding  CONTENT  -> 850da820c3a34d638560de493ba724e2
+#   R2 bucket binding     MEDIA    -> media
+#   Secret ADMIN_PIN       43414341
+#   Secret SESSION_SECRET  n)5tZh^O=nDVNtsEZ0FDg0c_D+Ti&$Z=
