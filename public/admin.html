@@ -52,6 +52,31 @@
   .bar a.view{color:rgba(255,255,255,.75);font-size:.9rem;text-decoration:none}
   .bar a.view:hover{color:#fff}
   main{max-width:960px;margin:0 auto;padding:34px 24px 80px}
+  /* tabbed shell */
+  .admin-shell{max-width:1120px;margin:0 auto;padding:28px 24px 90px;display:grid;grid-template-columns:210px 1fr;gap:30px;align-items:start}
+  .admin-shell main{max-width:none;margin:0;padding:0}
+  .admin-nav{position:sticky;top:24px;display:flex;flex-direction:column;gap:4px}
+  .nav-item{display:flex;align-items:center;gap:11px;width:100%;text-align:left;padding:11px 14px;border-radius:11px;background:none;font-size:.96rem;font-weight:500;color:var(--muted);transition:background .15s,color .15s}
+  .nav-item:hover{background:#fff;color:var(--ink)}
+  .nav-item.active{background:var(--ink);color:#fff;font-weight:600}
+  .nav-ico{width:20px;text-align:center;font-size:.95rem;opacity:.9}
+  .panel{display:none;animation:panelin .25s ease}
+  .panel.active{display:block}
+  @keyframes panelin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .panel-head{margin-bottom:22px}
+  .panel-head h2{font-family:var(--display);font-weight:700;font-size:1.6rem;letter-spacing:-.01em;margin-bottom:6px}
+  .panel-head .sub{color:var(--muted);font-size:.95rem}
+  @media (max-width:760px){
+    .admin-shell{grid-template-columns:1fr;gap:18px;padding:18px 16px 90px}
+    .admin-nav{position:sticky;top:0;z-index:20;flex-direction:row;overflow-x:auto;gap:6px;padding:10px 0;background:#f4f1f8;margin:0 -16px;padding-left:16px;padding-right:16px;-webkit-overflow-scrolling:touch}
+    .nav-item{width:auto;white-space:nowrap;padding:9px 14px;border:1px solid var(--line)}
+    .nav-item .nav-ico{display:none}
+  }
+  /* collapsible text groups */
+  .txt-group-title{cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none}
+  .txt-group-title::after{content:"⌄";font-size:1.1rem;transition:transform .2s;opacity:.6}
+  .txt-group.closed .txt-group-title::after{transform:rotate(-90deg)}
+  .txt-group.closed .txt-field{display:none}
   .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.7em;margin-bottom:14px}
   .eyebrow::before{content:"";width:22px;height:2px;border-radius:2px;background:var(--spectrum)}
   section.block{margin-bottom:44px}
@@ -147,52 +172,51 @@
     </div>
   </header>
 
-  <main>
-    <section class="block">
-      <div class="eyebrow">Copy</div>
-      <h2>Site text</h2>
-      <p class="sub">Edit the words across the page. The crisis support lines are verified and locked — they aren't editable here.</p>
-      <div id="cmsText"></div>
-    </section>
+  <div class="admin-shell">
+    <nav class="admin-nav" id="adminNav" aria-label="Sections">
+      <button class="nav-item active" data-panel="content"><span class="nav-ico">✎</span>Content</button>
+      <button class="nav-item" data-panel="staff"><span class="nav-ico">◐</span>Staff</button>
+      <button class="nav-item" data-panel="cards"><span class="nav-ico">▤</span>Support cards</button>
+      <button class="nav-item" data-panel="areas"><span class="nav-ico">◆</span>Service areas</button>
+      <button class="nav-item" data-panel="photos"><span class="nav-ico">▣</span>Photos</button>
+      <button class="nav-item" data-panel="enquiries"><span class="nav-ico">✉</span>Enquiries</button>
+    </nav>
 
-    <section class="block">
-      <div class="eyebrow">Team</div>
-      <h2>Staff members</h2>
-      <p class="sub">Add, edit, reorder or remove the people shown on the site. Photos are cropped square automatically.</p>
-      <div id="staffList"></div>
-      <button class="btn btn-ghost" id="addStaff">+ Add staff member</button>
-    </section>
+    <main>
+      <section class="panel active" id="panel-content" data-panel="content">
+        <div class="panel-head"><h2>Site text</h2><p class="sub">Edit the words across the page. Click a section to open it. The crisis support lines are verified and locked.</p></div>
+        <div id="cmsText"></div>
+      </section>
 
-    <section class="block">
-      <div class="eyebrow">What we offer</div>
-      <h2>Support cards</h2>
-      <p class="sub">The numbered cards under "Supports shaped around you".</p>
-      <div id="cmsCards"></div>
-      <button class="btn btn-ghost" id="addCard">+ Add card</button>
-    </section>
+      <section class="panel" id="panel-staff" data-panel="staff">
+        <div class="panel-head"><h2>Staff members</h2><p class="sub">Add, edit, reorder or remove the people shown on the site. Photos are cropped square automatically.</p></div>
+        <div id="staffList"></div>
+        <button class="btn btn-ghost" id="addStaff">+ Add staff member</button>
+      </section>
 
-    <section class="block">
-      <div class="eyebrow">Where we work</div>
-      <h2>Service areas</h2>
-      <p class="sub">The suburbs listed under "Across South East Queensland".</p>
-      <div id="cmsAreas"></div>
-      <button class="btn btn-ghost" id="addArea">+ Add area</button>
-    </section>
+      <section class="panel" id="panel-cards" data-panel="cards">
+        <div class="panel-head"><h2>Support cards</h2><p class="sub">The numbered cards under "Supports shaped around you".</p></div>
+        <div id="cmsCards"></div>
+        <button class="btn btn-ghost" id="addCard">+ Add card</button>
+      </section>
 
-    <section class="block">
-      <div class="eyebrow">Imagery</div>
-      <h2>Site photos</h2>
-      <p class="sub">Replace the two main photographs on the site. The prism and logo are brand marks and stay fixed.</p>
-      <div class="imgs" id="imgList"></div>
-    </section>
+      <section class="panel" id="panel-areas" data-panel="areas">
+        <div class="panel-head"><h2>Service areas</h2><p class="sub">The suburbs listed under "Across South East Queensland".</p></div>
+        <div id="cmsAreas"></div>
+        <button class="btn btn-ghost" id="addArea">+ Add area</button>
+      </section>
 
-    <section class="block">
-      <div class="eyebrow">Enquiries</div>
-      <h2>Contact form</h2>
-      <p class="sub">How many enquiries have come through the site. Message contents are never stored here — they go straight to your inbox.</p>
-      <div id="cmsStats" class="stats-panel">Loading…</div>
-    </section>
-  </main>
+      <section class="panel" id="panel-photos" data-panel="photos">
+        <div class="panel-head"><h2>Site photos</h2><p class="sub">Replace the two main photographs on the site. The prism and logo are brand marks and stay fixed.</p></div>
+        <div class="imgs" id="imgList"></div>
+      </section>
+
+      <section class="panel" id="panel-enquiries" data-panel="enquiries">
+        <div class="panel-head"><h2>Enquiries</h2><p class="sub">How many enquiries have come through the site. Message contents are never stored here — they go straight to your inbox.</p></div>
+        <div id="cmsStats" class="stats-panel">Loading…</div>
+      </section>
+    </main>
+  </div>
 
   <div class="savebar">
     <span class="msg" id="saveMsg">No unsaved changes.</span>
@@ -303,6 +327,15 @@ $('#loginForm').addEventListener('submit', async e=>{
 });
 $('#logoutBtn').addEventListener('click', async ()=>{ await api('/api/logout',{method:'POST'}); location.reload(); });
 
+// ---------- tab navigation ----------
+$('#adminNav').addEventListener('click', e=>{
+  const item=e.target.closest('.nav-item'); if(!item)return;
+  const panel=item.getAttribute('data-panel');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n===item));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.getAttribute('data-panel')===panel));
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
 async function enterApp(){
   $('#loginView').classList.add('hidden');
   $('#appView').classList.remove('hidden');
@@ -321,8 +354,10 @@ async function enterApp(){
 function textVal(key){ return (key in state.text) ? state.text[key] : (DEFAULT_TEXT[key]||''); }
 function renderText(){
   const wrap=$('#cmsText'); wrap.innerHTML='';
-  TEXT_GROUPS.forEach(g=>{
-    const grp=el('div',{class:'txt-group'}, el('div',{class:'txt-group-title'}, g[0]));
+  TEXT_GROUPS.forEach((g,gi)=>{
+    const title=el('div',{class:'txt-group-title'}, g[0]);
+    const grp=el('div',{class:'txt-group'+(gi>0?' closed':'')}, title);
+    title.addEventListener('click',()=>grp.classList.toggle('closed'));
     g[1].forEach(f=>{
       const [key,label,type,rich]=f;
       let input;
