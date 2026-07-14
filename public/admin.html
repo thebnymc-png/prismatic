@@ -134,6 +134,42 @@
   .stat-recent{margin-top:18px;border-top:1px solid var(--line);padding-top:16px}
   .stat-recent-title{font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
   .stat-row{font-size:.9rem;color:var(--ink-2,#333);padding:3px 0}
+  /* updates editor */
+  .post-row{display:flex;align-items:center;gap:16px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:12px}
+  .post-row .thumb{width:64px;height:48px;border-radius:8px;object-fit:cover;background:linear-gradient(135deg,#efe9f7,#e6f1fa);flex:none}
+  .post-row .pr-main{flex:1;min-width:0}
+  .post-row .pr-title{font-weight:600;font-size:1rem}
+  .post-row .pr-meta{font-size:.82rem;color:var(--muted);margin-top:2px}
+  .badge{display:inline-block;font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:999px;margin-left:8px;vertical-align:middle}
+  .badge.live{background:#e6f7ec;color:#1e7d3e}
+  .badge.draft{background:#f2eef7;color:#6f6880}
+  .ed-field{margin-bottom:20px}
+  .ed-field > label{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .post-img{width:100%;max-width:420px;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#efe9f7,#e6f1fa);display:flex;align-items:center;justify-content:center;position:relative}
+  .post-img img{width:100%;height:100%;object-fit:cover}
+  .post-img .ph{font-family:var(--mono);font-size:.7rem;color:#9a90ad}
+  .post-img.busy::after{content:"";position:absolute;inset:0;background:rgba(255,255,255,.6) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="%237B2FF7" stroke-width="3" stroke-dasharray="42" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="0.8s" repeatCount="indefinite"/></circle></svg>') center/28px no-repeat}
+  .rte-toolbar{display:flex;align-items:center;gap:4px;flex-wrap:wrap;border:1px solid var(--line);border-bottom:none;border-radius:12px 12px 0 0;background:#faf8fc;padding:8px 10px}
+  .rte-toolbar button{min-width:32px;height:32px;padding:0 8px;border-radius:7px;background:#fff;border:1px solid var(--line);font-size:.9rem;color:var(--ink);cursor:pointer}
+  .rte-toolbar button:hover{border-color:var(--ink)}
+  .rte-sep{width:1px;height:20px;background:var(--line);margin:0 3px}
+  .rte{border:1px solid var(--line);border-radius:0 0 12px 12px;min-height:220px;padding:16px 18px;font-size:1rem;line-height:1.6;background:#fff;outline:none}
+  .rte:focus{border-color:#7B2FF7}
+  .rte h2{font-family:var(--display);font-size:1.35rem;margin:.6em 0 .3em}
+  .rte h3{font-family:var(--display);font-size:1.1rem;margin:.6em 0 .3em}
+  .rte p{margin:.5em 0}
+  .rte ul,.rte ol{margin:.5em 0 .5em 1.4em}
+  .rte blockquote{border-left:3px solid var(--line);margin:.6em 0;padding-left:14px;color:var(--muted)}
+  .rte a{color:#7B2FF7;text-decoration:underline}
+  .rte:empty::before{content:"Write your update here…";color:#b3aabf}
+  .rte-hint{font-size:.78rem;color:var(--muted);margin-top:8px}
+  .switch{display:flex;align-items:center;gap:10px;font-size:.95rem;color:var(--ink);text-transform:none;letter-spacing:0}
+  .switch input{width:18px;height:18px}
+  .ed-actions{display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);padding-top:20px;margin-top:8px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip-toggle{font-size:.85rem;padding:6px 13px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
+  .chip-toggle:hover{border-color:var(--ink)}
+  .chip-toggle.on{background:var(--ink);color:#fff;border-color:var(--ink)}
   .savebar{position:sticky;bottom:0;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:14px 0;z-index:30}
   .savebar-in{max-width:1120px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
   @media (max-width:760px){.savebar-in{padding:0 16px}}
@@ -180,6 +216,7 @@
       <button class="nav-item" data-panel="staff"><span class="nav-ico">◐</span>Staff</button>
       <button class="nav-item" data-panel="cards"><span class="nav-ico">▤</span>Support cards</button>
       <button class="nav-item" data-panel="areas"><span class="nav-ico">◆</span>Service areas</button>
+      <button class="nav-item" data-panel="updates"><span class="nav-ico">✎</span>Updates</button>
       <button class="nav-item" data-panel="photos"><span class="nav-ico">▣</span>Photos</button>
       <button class="nav-item" data-panel="enquiries"><span class="nav-ico">✉</span>Enquiries</button>
     </nav>
@@ -206,6 +243,59 @@
         <div class="panel-head"><h2>Service areas</h2><p class="sub">The suburbs listed under "Across South East Queensland".</p></div>
         <div id="cmsAreas"></div>
         <button class="btn btn-ghost" id="addArea">+ Add area</button>
+      </section>
+
+      <section class="panel" id="panel-updates" data-panel="updates">
+        <div class="panel-head"><h2>Updates</h2><p class="sub">Post news, new services and announcements. Published posts appear on the Updates page and the homepage teaser.</p></div>
+
+        <div id="postsView">
+          <div id="postsList"></div>
+          <button class="btn btn-ghost" id="newPost">+ New post</button>
+        </div>
+
+        <div id="postEditor" class="hidden">
+          <div class="ed-field"><label>Title</label><input id="pTitle" type="text" placeholder="Post title"></div>
+
+          <div class="ed-field"><label>Locations covered (helps local search ranking)</label>
+            <div class="chips" id="pAreas"></div>
+            <div style="display:flex;gap:8px;margin-top:10px">
+              <input id="pAreaInput" type="text" placeholder="Add another area" style="flex:1">
+              <button type="button" class="btn btn-ghost" id="pAreaAdd" style="padding:8px 14px;font-size:.85rem">Add</button>
+            </div>
+          </div>
+
+          <div class="ed-field"><label>Header image</label>
+            <div class="post-img" id="pImgSlot"><div class="ph">No image yet</div></div>
+            <label class="btn btn-ghost file-btn" style="padding:8px 14px;font-size:.85rem;margin-top:10px">Upload image<input type="file" id="pImgFile" accept="image/*"></label>
+          </div>
+
+          <div class="ed-field"><label>Body</label>
+            <div class="rte-toolbar" id="pToolbar">
+              <button type="button" data-cmd="bold" title="Bold"><b>B</b></button>
+              <button type="button" data-cmd="italic" title="Italic"><i>I</i></button>
+              <span class="rte-sep"></span>
+              <button type="button" data-block="h2" title="Heading">H2</button>
+              <button type="button" data-block="h3" title="Subheading">H3</button>
+              <button type="button" data-block="blockquote" title="Quote">&ldquo;&rdquo;</button>
+              <span class="rte-sep"></span>
+              <button type="button" data-cmd="insertUnorderedList" title="Bulleted list">&bull;</button>
+              <button type="button" data-cmd="insertOrderedList" title="Numbered list">1.</button>
+              <span class="rte-sep"></span>
+              <button type="button" data-link title="Add link">Link</button>
+              <button type="button" data-unlink title="Remove link">Unlink</button>
+            </div>
+            <div id="pBody" class="rte" contenteditable="true"></div>
+            <div class="rte-hint">Tip: pasted text comes in plain — use the buttons above to format.</div>
+          </div>
+
+          <div class="ed-field"><label class="switch"><input type="checkbox" id="pPublished"><span>Published (uncheck to keep as a draft)</span></label></div>
+
+          <div class="ed-actions">
+            <button class="btn btn-spectrum" id="pSave">Save post</button>
+            <button class="btn btn-ghost" id="pCancel">Cancel</button>
+            <button class="btn btn-danger hidden" id="pDelete" style="margin-left:auto">Delete post</button>
+          </div>
+        </div>
       </section>
 
       <section class="panel" id="panel-photos" data-panel="photos">
@@ -337,6 +427,8 @@ $('#adminNav').addEventListener('click', e=>{
   const panel=item.getAttribute('data-panel');
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n===item));
   document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.getAttribute('data-panel')===panel));
+  const sb=document.querySelector('.savebar'); if(sb)sb.style.display=(panel==='updates')?'none':'';
+  if(window.__loadPosts && panel==='updates')window.__loadPosts();
   if(window.scrollY>0)window.scrollTo(0,0);
 });
 
@@ -351,6 +443,7 @@ async function enterApp(){
     staff: Array.isArray(data?.staff)?data.staff:[],
     images: data?.images||{}
   };
+  window.__siteAreas=(state.areas&&state.areas.length)?state.areas.slice():DEFAULT_AREAS.slice();
   renderText(); renderStaff(); renderCards(); renderAreas(); renderImages(); loadStats(); setDirty(false);
 }
 
@@ -546,6 +639,93 @@ window.addEventListener('beforeunload',e=>{ if(dirty){e.preventDefault();e.retur
 (async ()=>{
   // no-op: login is always shown first for clarity; cookie still authorises saves.
 })();
+
+// ---------- Updates (blog) ----------
+(function(){
+  const listEl=$('#postsList'), view=$('#postsView'), editor=$('#postEditor'), body=$('#pBody');
+  let editingId=null, pImage='', pAreas=new Set();
+  try{ document.execCommand('defaultParagraphSeparator', false, 'p'); }catch(e){}
+  function renderAreaChips(){
+    const wrap=$('#pAreas'); wrap.innerHTML='';
+    const known=(window.__siteAreas||[]); const all=[...new Set([...known, ...pAreas])];
+    all.forEach(a=>{ const on=pAreas.has(a);
+      wrap.append(el('button',{type:'button',class:'chip-toggle'+(on?' on':''),onclick:()=>{ pAreas.has(a)?pAreas.delete(a):pAreas.add(a); renderAreaChips(); }}, a)); });
+  }
+  $('#pAreaAdd').addEventListener('click',()=>{ const v=$('#pAreaInput').value.trim(); if(v){ pAreas.add(v); $('#pAreaInput').value=''; renderAreaChips(); } });
+  $('#pAreaInput').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); $('#pAreaAdd').click(); } });
+
+  async function loadPosts(){
+    const {data}=await api('/api/posts');
+    const posts=(data&&data.posts)||[];
+    listEl.innerHTML='';
+    if(!posts.length){ listEl.append(el('p',{style:'color:var(--muted)'},'No posts yet. Create your first update.')); return; }
+    posts.forEach(p=>{
+      const thumb = p.image ? el('img',{class:'thumb',src:'/api/media/'+p.image,alt:''}) : el('div',{class:'thumb'});
+      const meta = new Date(p.date).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'});
+      const badge = el('span',{class:'badge '+(p.published?'live':'draft')}, p.published?'Live':'Draft');
+      listEl.append(el('div',{class:'post-row'},
+        thumb,
+        el('div',{class:'pr-main'}, el('div',{class:'pr-title'}, esc(p.title), badge), el('div',{class:'pr-meta'}, meta)),
+        el('button',{class:'btn btn-ghost',style:'padding:7px 14px;font-size:.85rem',onclick:()=>openEditor(p.id)},'Edit')));
+    });
+  }
+  function showList(){ editor.classList.add('hidden'); view.classList.remove('hidden'); loadPosts(); }
+  function setImg(key){ pImage=key||''; const slot=$('#pImgSlot'); slot.innerHTML=''; if(pImage) slot.append(el('img',{src:'/api/media/'+pImage,alt:''})); else slot.append(el('div',{class:'ph'},'No image yet')); }
+  async function openEditor(id){
+    editingId=id||null; $('#pDelete').classList.toggle('hidden', !id);
+    if(id){ const {data}=await api('/api/posts/'+id); const p=(data&&data.post)||{};
+      $('#pTitle').value=p.title||''; body.innerHTML=p.body||''; $('#pPublished').checked=!!p.published; setImg(p.image||''); pAreas=new Set(p.areas||[]); renderAreaChips(); }
+    else { $('#pTitle').value=''; body.innerHTML=''; $('#pPublished').checked=false; setImg(''); pAreas=new Set(); renderAreaChips(); }
+    view.classList.add('hidden'); editor.classList.remove('hidden'); window.scrollTo(0,0);
+  }
+  $('#pToolbar').addEventListener('click', e=>{
+    const btn=e.target.closest('button'); if(!btn)return; body.focus();
+    if(btn.dataset.cmd){ document.execCommand(btn.dataset.cmd,false,null); }
+    else if(btn.dataset.block){ document.execCommand('formatBlock',false,'<'+btn.dataset.block+'>'); }
+    else if(btn.hasAttribute('data-link')){ const u=prompt('Link URL (https://…)'); if(u) document.execCommand('createLink',false,u); }
+    else if(btn.hasAttribute('data-unlink')){ document.execCommand('unlink',false,null); }
+  });
+  body.addEventListener('paste', e=>{ e.preventDefault(); const t=(e.clipboardData||window.clipboardData).getData('text/plain'); document.execCommand('insertText',false,t); });
+  const ALLOWED={P:1,BR:1,STRONG:1,EM:1,U:1,H2:1,H3:1,UL:1,OL:1,LI:1,BLOCKQUOTE:1,A:1};
+  function cleanNode(node){
+    [...node.childNodes].forEach(ch=>{
+      if(ch.nodeType===1){
+        let tag=ch.tagName; if(tag==='B')tag='STRONG'; if(tag==='I')tag='EM'; if(tag==='DIV')tag='P';
+        if(!ALLOWED[tag]){ while(ch.firstChild) node.insertBefore(ch.firstChild,ch); node.removeChild(ch); return; }
+        if(ch.tagName!==tag){ const rep=document.createElement(tag); while(ch.firstChild)rep.appendChild(ch.firstChild); node.replaceChild(rep,ch); cleanNode(rep); return; }
+        [...ch.attributes].forEach(a=>{ if(!(ch.tagName==='A'&&a.name==='href')) ch.removeAttribute(a.name); });
+        if(ch.tagName==='A'){ const h=ch.getAttribute('href')||''; if(!/^(https?:|mailto:|tel:)/i.test(h)) ch.removeAttribute('href'); else { ch.setAttribute('rel','noopener noreferrer nofollow'); ch.setAttribute('target','_blank'); } }
+        cleanNode(ch);
+      } else if(ch.nodeType===8){ node.removeChild(ch); }
+    });
+  }
+  function cleanBody(){ const tmp=document.createElement('div'); tmp.innerHTML=body.innerHTML; cleanNode(tmp); return tmp.innerHTML.trim(); }
+  $('#pImgFile').addEventListener('change', async e=>{
+    const file=e.target.files[0]; e.target.value=''; if(!file)return; const slot=$('#pImgSlot'); slot.classList.add('busy');
+    try{ const blob=await resizeToBlob(file,1600,1600,false); const key=await doUpload(blob); slot.classList.remove('busy'); setImg(key); }
+    catch(err){ slot.classList.remove('busy'); toast(err.message||'Upload failed'); }
+  });
+  $('#newPost').addEventListener('click',()=>openEditor(null));
+  $('#pCancel').addEventListener('click', showList);
+  $('#pSave').addEventListener('click', async ()=>{
+    const title=$('#pTitle').value.trim(); if(!title){ toast('Please add a title.'); return; }
+    const payload={ title, body:cleanBody(), image:pImage, published:$('#pPublished').checked, areas:[...pAreas] };
+    const btn=$('#pSave'); btn.disabled=true; btn.textContent='Saving…';
+    const path=editingId?'/api/posts/'+editingId:'/api/posts', method=editingId?'PUT':'POST';
+    const {status,data}=await api(path,{method,headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
+    btn.disabled=false; btn.textContent='Save post';
+    if(status===200){ toast('Saved.'); showList(); }
+    else if(status===401){ toast('Session expired. Please sign in again.'); setTimeout(()=>location.reload(),1200); }
+    else { toast((data&&data.error)||'Save failed'); }
+  });
+  $('#pDelete').addEventListener('click', async ()=>{
+    if(!editingId||!confirm('Delete this post? This cannot be undone.'))return;
+    const {status}=await api('/api/posts/'+editingId,{method:'DELETE'});
+    if(status===200){ toast('Deleted.'); showList(); } else toast('Delete failed');
+  });
+  window.__loadPosts=loadPosts;
+})();
+
 </script>
 </body>
 </html>

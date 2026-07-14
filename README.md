@@ -44,6 +44,18 @@ Use Cloudflare Web Analytics (free, no cookies). Easiest: enable Web Analytics f
 site in the Cloudflare dashboard (auto-injects, no code). Or paste your token into the
 commented beacon snippet near the end of public/index.html and uncomment it.
 
+## Updates / Newsletter (SEO)
+Blog-style posts Alvin manages in the admin Updates tab. Public pages are
+SERVER-RENDERED by Functions for search engines:
+- /updates            -> functions/updates.js (list of published posts)
+- /updates/<slug>     -> functions/updates/[slug].js (full article: unique title,
+  meta description, canonical, Open Graph image, and JSON-LD BlogPosting with
+  contentLocation for every area the post covers)
+- /sitemap.xml        -> functions/sitemap.xml.js (auto-lists every published post)
+Each post can cover multiple service areas (set in the editor); those areas appear
+in the visible text, the area tags, and the structured data to support local search.
+Posts, images and areas are stored in KV/R2 (no new setup).
+
 ## Deploy (Git-connected Pages)
 Repo layout: static site in `public/`, Functions in `functions/` at the repo root.
 The Functions folder sits OUTSIDE `public/` so Pages runs it instead of serving it as text.

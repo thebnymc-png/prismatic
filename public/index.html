@@ -141,6 +141,14 @@
   .staff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
   .staff-card{--accent:#131019;background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;transition:transform .22s,box-shadow .22s,border-color .22s}
   .staff-card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 22px 44px -22px color-mix(in srgb, var(--accent) 55%, transparent), 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent)}
+  .teaser-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;margin-top:22px}
+  .teaser-card{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:transform .22s,box-shadow .22s;display:flex;flex-direction:column}
+  .teaser-card:hover{transform:translateY(-4px);box-shadow:0 22px 44px -26px rgba(19,16,25,.28)}
+  .teaser-card .cover{aspect-ratio:16/9;background:linear-gradient(135deg,#efe9f7,#e6f1fa) center/cover}
+  .teaser-card .tc-body{padding:20px 22px 24px;display:flex;flex-direction:column;gap:7px}
+  .teaser-card .date{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint)}
+  .teaser-card h3{font-family:var(--display);font-weight:600;font-size:1.2rem;letter-spacing:-.01em}
+  .teaser-card p{color:var(--ink-soft);font-size:.93rem}
   .staff-photo{aspect-ratio:1/1;background:linear-gradient(135deg,#efe9f7,#e6f1fa);display:flex;align-items:center;justify-content:center}
   .staff-photo svg{width:34%;height:auto;opacity:.4}
   .staff-body{padding:24px 24px 28px}
@@ -328,6 +336,7 @@
       <a href="#supports">Supports</a>
       <a href="#areas">Where we work</a>
       <a href="#team">Our team</a>
+      <a href="/updates">Updates</a>
       <a href="#resources">Support lines</a>
       <a href="#contact">Contact</a>
       <a href="https://www.jotform.com/form/260211704799055" target="_blank" rel="noopener" class="btn btn-spectrum">Apply here</a>
@@ -513,6 +522,16 @@
         </div>
       </article>
     </div>
+  </div>
+</section>
+
+<!-- ===== Latest updates (teaser) ===== -->
+<section class="section" id="updates-teaser" hidden style="padding-top:0">
+  <div class="wrap">
+    <span class="eyebrow">Latest updates</span>
+    <h2 style="margin-top:14px">News from the team</h2>
+    <div class="teaser-grid" id="teaserGrid"></div>
+    <a href="/updates" class="btn btn-ghost" style="margin-top:26px">See all updates</a>
   </div>
 </section>
 
@@ -867,6 +886,23 @@
       if(im.community){var c=document.getElementById('site-community');if(c)c.src='/api/media/'+encodeURIComponent(im.community);}
       if(im.handshake){var h=document.getElementById('site-handshake');if(h)h.src='/api/media/'+encodeURIComponent(im.handshake);}
       if(window.__processStaffCards)window.__processStaffCards();
+    }).catch(function(){});
+  })();
+
+  // Latest updates teaser: show up to 3 published posts, hide the section if none.
+  (function(){
+    function esc(s){var d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML;}
+    function fmt(t){return new Date(t).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'});}
+    fetch('/api/posts',{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(d){
+      var posts=(d&&d.posts)||[];
+      if(!posts.length)return;
+      var grid=document.getElementById('teaserGrid'); if(!grid)return;
+      grid.innerHTML=posts.slice(0,3).map(function(p){
+        var cover=p.image?'<div class="cover" style="background-image:url(/api/media/'+encodeURIComponent(p.image)+')"></div>':'<div class="cover"></div>';
+        return '<a class="teaser-card" href="/updates/'+encodeURIComponent(p.slug)+'">'+cover+
+          '<div class="tc-body"><div class="date">'+fmt(p.date)+'</div><h3>'+esc(p.title)+'</h3><p>'+esc(p.excerpt||'')+'</p></div></a>';
+      }).join('');
+      var sec=document.getElementById('updates-teaser'); if(sec)sec.hidden=false;
     }).catch(function(){});
   })();
 

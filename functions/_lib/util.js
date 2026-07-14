@@ -173,3 +173,45 @@ export function seedContent() {
     text: {}, supportCards: [], areas: [],
   };
 }
+
+
+// ---------- blog / updates helpers ----------
+export function slugify(s){
+  return String(s||"").toLowerCase().trim()
+    .replace(/[^a-z0-9\s-]/g,"").replace(/\s+/g,"-").replace(/-+/g,"-").replace(/^-|-$/g,"").slice(0,60) || "post";
+}
+
+// Whitelist HTML sanitiser for post bodies. Keeps a small set of formatting
+// tags, strips every attribute except safe link hrefs, and drops scripts,
+// styles, iframes and event handlers. Pure JS so it runs in Workers and tests.
+const HTML_ALLOWED = {p:1,br:1,strong:1,b:1,em:1,i:1,u:1,h2:1,h3:1,ul:1,ol:1,li:1,blockquote:1,a:1};
+export function sanitizeHTML(html){
+  html = String(html||"");
+  html = html.replace(/<!--[\s\S]*?-->/g,"");
+  html = html.replace(/<(script|style|iframe|object|embed|noscript|template)[\s\S]*?<\/\1>/gi,"");
+  html = html.replace(/<(script|style|iframe|object|embed)[^>]*>/gi,"");
+  html = html.replace(/<(\/?)([a-zA-Z][a-zA-Z0-9]*)\b([^>]*)>/g, (m, slash, tag, attrs) => {
+    tag = tag.toLowerCase();
+    const out = tag==="b"?"strong": tag==="i"?"em": tag;
+    if(!HTML_ALLOWED[tag]) return "";
+    if(slash) return "</"+out+">";
+    if(tag==="a"){
+      const hm = attrs.match(/\bhref\s*=\s*("([^"]*)"|'([^']*)'|([^\s>]+))/i);
+      let href = hm ? (hm[2]||hm[3]||hm[4]||"") : "";
+      if(!/^(https?:|mailto:|tel:)/i.test(href)) return "<a>";
+      href = href.replace(/"/g,"&quot;");
+      return '<a href="'+href+'" rel="noopener noreferrer nofollow" target="_blank">';
+    }
+    return "<"+out+">";
+  });
+  return html.trim();
+}
+
+export function sanitizePost(input){
+  const title = clip(input?.title, 120).trim();
+  const body = sanitizeHTML(input?.body).slice(0, 40000);
+  let excerpt = clip(input?.excerpt, 240).trim();
+  if(!excerpt) excerpt = body.replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim().slice(0,180);
+  const areas = Array.isArray(input?.areas) ? input.areas.slice(0,12).map(a=>clip(a,40).trim()).filter(Boolean) : [];
+  return { title, body, excerpt, image: mediaKey(input?.image), published: !!input?.published, areas };
+}
