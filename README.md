@@ -56,6 +56,40 @@ Each post can cover multiple service areas (set in the editor); those areas appe
 in the visible text, the area tags, and the structured data to support local search.
 Posts, images and areas are stored in KV/R2 (no new setup).
 
+## Admin auth: Cloudflare Access only (no PIN)
+The admin is protected solely by Cloudflare Access (Zero Trust, email one-time PIN).
+There is no application PIN. The Functions independently VERIFY the Access JWT on
+every admin request (signature against your team JWKS, audience, issuer, expiry), so
+if Access were ever misconfigured or removed, the admin API fails closed (denies),
+never open.
+
+Admin-only endpoints live under /api/admin/* (content PUT, upload, stats, posts
+GET/POST/PUT/DELETE). Public reads (GET /api/content, GET /api/posts,
+GET /api/posts/<slug>, GET /api/media/*, POST /api/contact) need no auth.
+
+### Required environment variables (Pages > Settings > Environment variables)
+- ACCESS_TEAM_DOMAIN  your Zero Trust team domain, e.g. prismatic.cloudflareaccess.com
+- ACCESS_AUD          the Application Audience (AUD) tag from the Access application
+- ADMIN_EMAILS        (optional) comma-separated allow-list, extra to the Access policy
+
+ADMIN_PIN and SESSION_SECRET are no longer used and can be deleted.
+IMPORTANT: the admin only works once Access is set up AND these vars are set. Set up
+Access first, copy its AUD tag, then add the vars and redeploy.
+
+### Set up Cloudflare Access (email one-time PIN)
+1. Cloudflare dashboard > Zero Trust (pick a team name if first time; free plan is fine).
+2. Settings > Authentication > Login methods: confirm "One-time PIN" is enabled (default).
+3. Access > Applications > Add an application > Self-hosted.
+   - Name: Prismatic Care Admin. Session duration: 24 hours.
+   - Application paths (Domain = your site):
+       prismaticcare.com.au/admin
+       prismaticcare.com.au/admin.html
+       prismaticcare.com.au/api/admin
+4. Policy: Action Allow; Include > Emails > alvin@prismaticcare.com.au (+ any others). Save.
+5. Open the application's Overview and copy the Application Audience (AUD) tag.
+6. In the Pages project, set ACCESS_TEAM_DOMAIN and ACCESS_AUD (from step 5), redeploy.
+7. Visiting /admin now emails a one-time code, then loads the panel directly (no PIN).
+
 ## Deploy (Git-connected Pages)
 Repo layout: static site in `public/`, Functions in `functions/` at the repo root.
 The Functions folder sits OUTSIDE `public/` so Pages runs it instead of serving it as text.

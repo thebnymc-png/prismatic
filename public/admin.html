@@ -183,23 +183,8 @@
 <body>
 
 <!-- LOGIN -->
-<div class="login-wrap" id="loginView">
-  <form class="login" id="loginForm">
-    <svg class="mark" viewBox="0 0 40 38" aria-hidden="true">
-      <polygon points="2,5 8,5 20,35" fill="#7B2FF7"/><polygon points="8,5 14,5 20,35" fill="#D6249F"/>
-      <polygon points="14,5 20,5 20,35" fill="#FB5343"/><polygon points="20,5 26,5 20,35" fill="#FF9A1F"/>
-      <polygon points="26,5 32,5 20,35" fill="#2FBE5B"/><polygon points="32,5 38,5 20,35" fill="#1FA2E0"/>
-    </svg>
-    <h1>Prismatic Care</h1>
-    <p>Enter your admin PIN to continue.</p>
-    <input id="pin" type="password" inputmode="numeric" autocomplete="current-password" placeholder="••••••" aria-label="Admin PIN">
-    <button class="btn btn-spectrum" type="submit" id="loginBtn">Sign in</button>
-    <div class="err" id="loginErr"></div>
-  </form>
-</div>
-
-<!-- APP -->
-<div id="appView" class="hidden">
+<!-- APP (Cloudflare Access has already authenticated the user) -->
+<div id="appView">
   <header class="bar">
     <div class="in">
       <img src="/assets/logo-white.png" alt="Prismatic Care">
@@ -404,22 +389,17 @@ function mediaURL(key){return key?('/api/media/'+key):null;}
 
 // ---------- API ----------
 async function api(path, opts={}){
+  // (401 from an admin call means the Access session lapsed -> re-authenticate)
   const r = await fetch(path, {credentials:'same-origin', ...opts});
+  if(r.status===401 && path.indexOf('/api/admin/')===0){ location.href='/admin'; return {status:401,data:null}; }
   let data=null; try{data=await r.json();}catch{}
   return {status:r.status, data};
 }
 
-// ---------- login ----------
-$('#loginForm').addEventListener('submit', async e=>{
-  e.preventDefault();
-  const btn=$('#loginBtn'), err=$('#loginErr');
-  err.textContent=''; btn.disabled=true; btn.textContent='Signing in…';
-  const {status,data} = await api('/api/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({pin:$('#pin').value})});
-  btn.disabled=false; btn.textContent='Sign in';
-  if(status===200){ enterApp(); }
-  else { err.textContent = data?.error || 'Sign in failed.'; $('#pin').value=''; $('#pin').focus(); }
-});
-$('#logoutBtn').addEventListener('click', async ()=>{ await api('/api/logout',{method:'POST'}); location.reload(); });
+// ---------- session ----------
+// Cloudflare Access has already verified the user before this page loaded, so we
+// go straight into the app. "Sign out" ends the Access session.
+$('#logoutBtn').addEventListener('click', ()=>{ location.href='/cdn-cgi/access/logout'; });
 
 // ---------- tab navigation ----------
 $('#adminNav').addEventListener('click', e=>{
@@ -433,8 +413,6 @@ $('#adminNav').addEventListener('click', e=>{
 });
 
 async function enterApp(){
-  $('#loginView').classList.add('hidden');
-  $('#appView').classList.remove('hidden');
   const {data} = await api('/api/content');
   state = {
     text: (data && data.text) ? data.text : {},
@@ -498,7 +476,7 @@ $('#addArea').addEventListener('click',()=>{state.areas.push('');setDirty(true);
 // ---------- enquiry stats ----------
 async function loadStats(){
   const box=$('#cmsStats');
-  const {status,data}=await api('/api/stats');
+  const {status,data}=await api('/api/admin/stats');
   if(status!==200||!data){ box.textContent='Sign in to view enquiry totals.'; return; }
   const recent=(data.recent||[]).map(t=>new Date(t));
   box.innerHTML='';
@@ -599,7 +577,7 @@ function resizeToBlob(file, targetW, targetH, cover){
   });
 }
 async function doUpload(blob){
-  const {status,data}=await api('/api/upload',{method:'POST',headers:{'content-type':'image/jpeg'},body:blob});
+  const {status,data}=await api('/api/admin/upload',{method:'POST',headers:{'content-type':'image/jpeg'},body:blob});
   if(status!==200||!data?.key) throw new Error(data?.error||'Upload failed');
   return data.key;
 }
@@ -621,7 +599,7 @@ async function uploadSiteImage(e,slot,prevEl){
 // ---------- save ----------
 $('#saveBtn').addEventListener('click', async ()=>{
   const btn=$('#saveBtn'); btn.disabled=true; btn.textContent='Saving…';
-  const {status,data}=await api('/api/content',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify(state)});
+  const {status,data}=await api('/api/admin/content',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify(state)});
   btn.textContent='Save changes';
   if(status===200){
     const c=data.content;
@@ -655,7 +633,7 @@ window.addEventListener('beforeunload',e=>{ if(dirty){e.preventDefault();e.retur
   $('#pAreaInput').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); $('#pAreaAdd').click(); } });
 
   async function loadPosts(){
-    const {data}=await api('/api/posts');
+    const {data}=await api('/api/admin/posts');
     const posts=(data&&data.posts)||[];
     listEl.innerHTML='';
     if(!posts.length){ listEl.append(el('p',{style:'color:var(--muted)'},'No posts yet. Create your first update.')); return; }
@@ -673,7 +651,7 @@ window.addEventListener('beforeunload',e=>{ if(dirty){e.preventDefault();e.retur
   function setImg(key){ pImage=key||''; const slot=$('#pImgSlot'); slot.innerHTML=''; if(pImage) slot.append(el('img',{src:'/api/media/'+pImage,alt:''})); else slot.append(el('div',{class:'ph'},'No image yet')); }
   async function openEditor(id){
     editingId=id||null; $('#pDelete').classList.toggle('hidden', !id);
-    if(id){ const {data}=await api('/api/posts/'+id); const p=(data&&data.post)||{};
+    if(id){ const {data}=await api('/api/admin/posts/'+id); const p=(data&&data.post)||{};
       $('#pTitle').value=p.title||''; body.innerHTML=p.body||''; $('#pPublished').checked=!!p.published; setImg(p.image||''); pAreas=new Set(p.areas||[]); renderAreaChips(); }
     else { $('#pTitle').value=''; body.innerHTML=''; $('#pPublished').checked=false; setImg(''); pAreas=new Set(); renderAreaChips(); }
     view.classList.add('hidden'); editor.classList.remove('hidden'); window.scrollTo(0,0);
@@ -711,7 +689,7 @@ window.addEventListener('beforeunload',e=>{ if(dirty){e.preventDefault();e.retur
     const title=$('#pTitle').value.trim(); if(!title){ toast('Please add a title.'); return; }
     const payload={ title, body:cleanBody(), image:pImage, published:$('#pPublished').checked, areas:[...pAreas] };
     const btn=$('#pSave'); btn.disabled=true; btn.textContent='Saving…';
-    const path=editingId?'/api/posts/'+editingId:'/api/posts', method=editingId?'PUT':'POST';
+    const path=editingId?'/api/admin/posts/'+editingId:'/api/admin/posts', method=editingId?'PUT':'POST';
     const {status,data}=await api(path,{method,headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
     btn.disabled=false; btn.textContent='Save post';
     if(status===200){ toast('Saved.'); showList(); }
@@ -720,11 +698,13 @@ window.addEventListener('beforeunload',e=>{ if(dirty){e.preventDefault();e.retur
   });
   $('#pDelete').addEventListener('click', async ()=>{
     if(!editingId||!confirm('Delete this post? This cannot be undone.'))return;
-    const {status}=await api('/api/posts/'+editingId,{method:'DELETE'});
+    const {status}=await api('/api/admin/posts/'+editingId,{method:'DELETE'});
     if(status===200){ toast('Deleted.'); showList(); } else toast('Delete failed');
   });
   window.__loadPosts=loadPosts;
 })();
+
+enterApp();
 
 </script>
 </body>

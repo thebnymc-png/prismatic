@@ -58,40 +58,6 @@ function bytesB64url(str) {
 const b64urlStr = (s) => b64urlBytes(te.encode(s));
 const strB64url = (s) => td.decode(bytesB64url(s));
 
-// ---- constant-time compare ----
-export function timingSafeEqual(a, b) {
-  if (typeof a !== "string" || typeof b !== "string" || a.length !== b.length) return false;
-  let r = 0;
-  for (let i = 0; i < a.length; i++) r |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  return r === 0;
-}
-
-// ---- HMAC session tokens ----
-async function hmac(secret, msg) {
-  const key = await crypto.subtle.importKey("raw", te.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
-  return new Uint8Array(await crypto.subtle.sign("HMAC", key, te.encode(msg)));
-}
-function sessionSecret(env) {
-  // Prefer a dedicated secret; fall back to the PIN so it still works if only
-  // ADMIN_PIN is set. Setting SESSION_SECRET (long random) is recommended.
-  return env.SESSION_SECRET || env.ADMIN_PIN || "";
-}
-export async function makeToken(env, ttlSec = 28800) {
-  const payload = b64urlStr(JSON.stringify({ exp: Date.now() + ttlSec * 1000 }));
-  const sig = b64urlBytes(await hmac(sessionSecret(env), payload));
-  return payload + "." + sig;
-}
-export async function verifyToken(env, token) {
-  if (!token || token.indexOf(".") < 0) return false;
-  const [payload, sig] = token.split(".");
-  const expected = b64urlBytes(await hmac(sessionSecret(env), payload));
-  if (!timingSafeEqual(sig, expected)) return false;
-  try {
-    const { exp } = JSON.parse(strB64url(payload));
-    return typeof exp === "number" && Date.now() < exp;
-  } catch { return false; }
-}
-
 export function getCookie(request, name) {
   const h = request.headers.get("Cookie") || "";
   for (const part of h.split(/;\s*/)) {
@@ -100,13 +66,46 @@ export function getCookie(request, name) {
   }
   return null;
 }
-export const sessionCookie = (token, ttlSec = 28800) =>
-  `pc_session=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=${ttlSec}`;
-export const clearCookie = () =>
-  `pc_session=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0`;
 
-export async function requireAuth(request, env) {
-  return verifyToken(env, getCookie(request, "pc_session"));
+// ---- Cloudflare Access (Zero Trust) verification ----
+// Admin routes are protected by Cloudflare Access. We independently verify the
+// Access JWT here so the app never relies on the network layer alone: if Access
+// were ever misconfigured or removed, these endpoints fail closed (deny), not open.
+// Requires env vars ACCESS_TEAM_DOMAIN (e.g. yourteam.cloudflareaccess.com) and
+// ACCESS_AUD (the application audience tag from the Access app). Optional
+// ADMIN_EMAILS (comma separated) adds an email allow-list on top.
+let _jwks = { keys: null, at: 0 };
+async function accessKeys(team) {
+  if (_jwks.keys && Date.now() - _jwks.at < 3600_000) return _jwks.keys;
+  const r = await fetch(`https://${team}/cdn-cgi/access/certs`);
+  const j = await r.json();
+  _jwks = { keys: j.keys || [], at: Date.now() };
+  return _jwks.keys;
+}
+export async function requireAccess(request, env) {
+  const team = env.ACCESS_TEAM_DOMAIN, aud = env.ACCESS_AUD;
+  if (!team || !aud) return false; // not configured -> deny
+  const token = request.headers.get("Cf-Access-Jwt-Assertion") || getCookie(request, "CF_Authorization");
+  if (!token || token.split(".").length !== 3) return false;
+  try {
+    const [h, p, s] = token.split(".");
+    const header = JSON.parse(strB64url(h));
+    const payload = JSON.parse(strB64url(p));
+    const audOk = Array.isArray(payload.aud) ? payload.aud.includes(aud) : payload.aud === aud;
+    if (!audOk) return false;
+    if (payload.iss && payload.iss !== `https://${team}`) return false;
+    if (payload.exp && Date.now() / 1000 >= payload.exp) return false;
+    const jwk = (await accessKeys(team)).find(k => k.kid === header.kid);
+    if (!jwk) return false;
+    const pub = await crypto.subtle.importKey("jwk", jwk, { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" }, false, ["verify"]);
+    const valid = await crypto.subtle.verify("RSASSA-PKCS1-v1_5", pub, bytesB64url(s), te.encode(h + "." + p));
+    if (!valid) return false;
+    if (env.ADMIN_EMAILS) {
+      const allow = env.ADMIN_EMAILS.split(",").map(e => e.trim().toLowerCase()).filter(Boolean);
+      if (allow.length && !allow.includes(String(payload.email || "").toLowerCase())) return false;
+    }
+    return true;
+  } catch { return false; }
 }
 
 // ---- content validation / normalisation ----
