@@ -98,7 +98,7 @@
   .hero{position:relative;padding:74px 0 34px}
   .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center}
   .hero .eyebrow{color:var(--violet);margin-bottom:20px}
-  .hero h1{font-weight:800;font-size:clamp(2.6rem,5.6vw,4.4rem);line-height:1.03;letter-spacing:-.03em}
+  .hero h1{font-weight:800;font-size:clamp(2.6rem,calc(5.6vw * var(--a11y-scale,1)),4.4rem);line-height:1.03;letter-spacing:-.03em}
   .hero h1 em{font-style:italic;font-weight:500}
   .hero h1 .spec{
     background:var(--spectrum);-webkit-background-clip:text;background-clip:text;color:transparent;
@@ -152,17 +152,20 @@
   .stage-head{display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:start;margin-bottom:38px}
   .num{
     font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:600;
-    font-size:clamp(3.4rem,8vw,5.6rem);line-height:.8;
+    font-size:clamp(3.4rem,calc(8vw * var(--a11y-scale,1)),5.6rem);line-height:.8;
     color:var(--accent);letter-spacing:-.03em;
     position:relative;
   }
   .num::after{content:"";display:block;width:3px;height:0;background:var(--accent);margin:18px 0 0 6px;border-radius:2px;transition:height .6s ease}
   .stage.in .num::after{height:64px}
   .stage-head .lead .eyebrow{color:var(--accent);margin-bottom:12px}
-  .stage-head h2{font-weight:700;font-size:clamp(1.85rem,3.6vw,2.7rem)}
+  .stage-head h2{font-weight:700;font-size:clamp(1.85rem,calc(3.6vw * var(--a11y-scale,1)),2.7rem)}
   .stage-head .say{color:var(--ink-2);font-size:1.12rem;max-width:34em;margin-top:14px}
 
   .grid{display:grid;gap:20px}
+  /* Grid children default to min-width:auto, so a padded card can size the track
+     wider than the container once text is enlarged. This lets tracks shrink. */
+  .grid>*{min-width:0}
   .cols-2{grid-template-columns:repeat(2,1fr)}
   .cols-3{grid-template-columns:repeat(3,1fr)}
 
@@ -239,7 +242,7 @@
   #connect .inner{position:relative;z-index:2;padding:56px 48px}
   #connect .band{height:6px;background:var(--spectrum)}
   #connect .eyebrow{color:#C9B6E8}
-  #connect h2{color:#fff;font-weight:700;font-size:clamp(1.9rem,3.6vw,2.8rem);max-width:16em}
+  #connect h2{color:#fff;font-weight:700;font-size:clamp(1.9rem,calc(3.6vw * var(--a11y-scale,1)),2.8rem);max-width:16em}
   #connect p.say{color:#C7C8D4;font-size:1.12rem;max-width:38em;margin:16px 0 0}
   #connect .qgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px 40px;margin:34px 0 8px}
   #connect .q{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid rgba(255,255,255,.12);color:#E7E7ED;font-size:.98rem}
@@ -275,7 +278,11 @@
   .foot-brand{display:flex;align-items:center;gap:12px;margin-bottom:16px}
   .foot-brand img{width:34px}
   .foot-brand .name{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:600;font-size:1.1rem}
-  .foot-contact{font-size:.94rem}
+  .foot-contact{font-size:.94rem;min-width:0}
+  /* The email address is a single unbreakable string; without this it sets the
+     grid's minimum width and pushes the footer past narrow screens at large text. */
+  .foot-grid>*{min-width:0}
+  .foot-contact a{overflow-wrap:anywhere}
   .foot-contact a{font-weight:600;text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:1px}
   .foot-contact a:hover{border-color:var(--violet)}
   .aoc{margin-top:22px;font-size:.8rem;color:var(--ink-2);border-top:1px solid var(--line);padding-top:18px;line-height:1.6}
@@ -312,6 +319,7 @@
     #connect .inner{padding:38px 22px}
   }
 </style>
+<script src="/assets/a11y.js"></script>
 </head>
 <body>
 

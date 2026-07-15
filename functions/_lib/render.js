@@ -35,7 +35,7 @@ header{background:var(--ink);position:sticky;top:0;z-index:50}
 .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);display:flex;align-items:center;gap:.7em}
 .eyebrow::before{content:"";width:24px;height:2px;border-radius:2px;background:var(--spectrum)}
 .page-head{padding:70px 0 34px}
-.page-head h1{font-family:var(--display);font-weight:700;font-size:clamp(2.2rem,5vw,3.4rem);letter-spacing:-.02em;margin-top:16px}
+.page-head h1{font-family:var(--display);font-weight:700;font-size:clamp(2.2rem,calc(5vw * var(--a11y-scale,1)),3.4rem);letter-spacing:-.02em;margin-top:16px}
 .page-head p{color:var(--ink-soft);margin-top:12px;max-width:560px}
 main{min-height:52vh;padding-bottom:80px}
 .post-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:26px;margin-top:20px}
@@ -54,7 +54,7 @@ main{min-height:52vh;padding-bottom:80px}
 .article .back{display:inline-flex;align-items:center;gap:.4em;color:var(--ink-faint);font-size:.9rem;margin-bottom:22px}
 .article .back:hover{color:var(--ink)}
 .article .date{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
-.article h1{font-family:var(--display);font-weight:700;font-size:clamp(2rem,4.5vw,3rem);letter-spacing:-.02em;margin:12px 0 16px}
+.article h1{font-family:var(--display);font-weight:700;font-size:clamp(2rem,calc(4.5vw * var(--a11y-scale,1)),3rem);letter-spacing:-.02em;margin:12px 0 16px}
 .article .served{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:26px}
 .article .served .lbl{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
 .article .cover{width:100%;border-radius:20px;margin-bottom:30px;aspect-ratio:16/9;object-fit:cover;background:linear-gradient(135deg,#efe9f7,#e6f1fa)}
@@ -119,6 +119,7 @@ export function page({ title, description, canonical, ogImage, ogType = "website
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>${PAGE_CSS}</style>
+<script src="/assets/a11y.js"></script>
 ${ld}
 </head><body>
 ${HEADER}
