@@ -320,6 +320,27 @@
   }
   :focus-visible{outline:3px solid #9a5cff;outline-offset:3px;border-radius:4px}
   .resources :focus-visible,.hero :focus-visible,header :focus-visible,footer :focus-visible{outline-color:#c9a6ff}
+
+  /* ===== NDIS clarity ===== */
+  #ndis .split{align-items:center}
+  #ndis h2{margin-top:16px}
+  .ndis-body{color:var(--ink-soft);margin:16px 0 24px;max-width:34em}
+  ul.ndis-check{list-style:none;margin:0 0 28px;padding:0;display:grid;gap:6px}
+  ul.ndis-check li{position:relative;padding:8px 0 8px 40px;font-weight:600;color:var(--ink);font-size:1.05rem}
+  ul.ndis-check li::before{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;border:2px solid var(--violet)}
+  ul.ndis-check li::after{content:"";position:absolute;left:9px;top:calc(50% - 1px);width:6px;height:11px;border:solid var(--violet);border-width:0 2.5px 2.5px 0;transform:translateY(-60%) rotate(42deg)}
+  .btn-ink{background:var(--ink);color:#fff}
+  .btn-ink:hover{transform:translateY(-2px);box-shadow:0 12px 28px -12px rgba(19,16,25,.5)}
+  .ndis-card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:32px;box-shadow:0 34px 66px -44px rgba(19,16,25,.34)}
+  .ndis-card .lbl{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint)}
+  .ndis-card h3{font-family:var(--display);font-weight:700;font-size:1.5rem;margin:6px 0 20px;letter-spacing:-.01em}
+  .ndis-cover{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:16/10;background:linear-gradient(140deg,#181227,#241a39);display:grid;place-items:center;text-align:center;padding:26px;border:1px solid rgba(255,255,255,.06)}
+  .ndis-cover .fan{position:absolute;inset:0;background:conic-gradient(from 210deg at 32% 42%,transparent,rgba(123,47,247,.55) 40deg,rgba(214,36,159,.5) 78deg,rgba(251,83,67,.4) 116deg,transparent 150deg);filter:blur(26px);opacity:.75}
+  .ndis-cover .ct{position:relative}
+  .ndis-cover .cband{font-family:var(--mono);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:#fff;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:999px;display:inline-block;margin-bottom:14px}
+  .ndis-cover h4{font-family:var(--display);font-weight:700;color:#fff;font-size:1.55rem;letter-spacing:-.01em;line-height:1.05}
+  .ndis-cover .csub{color:rgba(255,255,255,.72);font-size:.82rem;margin-top:8px}
+  .ndis-card .cap{color:var(--ink-soft);font-size:.95rem;margin:18px 0 0;line-height:1.55}
 </style>
 </head>
 <body>
@@ -391,7 +412,7 @@
           <polygon class="beam" points="253.3,246.3 249.3,249.4 390.1,451.3 410.8,435.6" fill="url(#beamgrad5)"/>
           <polygon class="beam" points="252.7,245.8 249.9,249.9 448.0,396.2 462.5,374.6" fill="url(#beamgrad6)"/>
         </g>
-        <image class="diamond-img" href="/assets/diamond.png" x="150" y="54" width="220"/>
+        <image class="diamond-img" href="/assets/diamond.png" x="150" y="54" width="220" height="195" preserveAspectRatio="xMidYMid meet"/>
       </svg>
     </div>
   </div>
@@ -437,6 +458,37 @@
         <p data-read data-cms="hours.body">Whether you need as little as two hours a week or as many as twenty, we'll work with you. The goal is to actually assist you in the way you need, not to fill a roster.</p>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ===== NDIS clarity ===== -->
+<section class="section" id="ndis" style="padding-top:0">
+  <div class="wrap split">
+    <div class="ndis-lead">
+      <span class="eyebrow">NDIS clarity</span>
+      <h2>Making the NDIS simple.</h2>
+      <p class="ndis-body">Whether you're new to the scheme or just need a change, we can help you understand your funding and how to get the most from your plan.</p>
+      <ul class="ndis-check" aria-label="What the guide covers">
+        <li>Check your eligibility</li>
+        <li>Preparation for planning meetings</li>
+        <li>Managing your self- or plan-managed funds</li>
+        <li>Connecting with local practitioners</li>
+      </ul>
+      <a href="/ndis-guide" class="btn btn-ink">Download our guide &rarr;</a>
+    </div>
+    <aside class="ndis-card">
+      <span class="lbl">Free NDIS resource</span>
+      <h3>Your NDIS journey</h3>
+      <div class="ndis-cover" aria-hidden="true">
+        <div class="fan"></div>
+        <div class="ct">
+          <span class="cband">Free resource</span>
+          <h4>Your NDIS Journey</h4>
+          <p class="csub">A guide to navigating your plan</p>
+        </div>
+      </div>
+      <p class="cap">A plain-language walk through the four stages: checking eligibility, preparing for planning meetings, managing funding, and connecting with the right support.</p>
+    </aside>
   </div>
 </section>
 
