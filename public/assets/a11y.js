@@ -83,6 +83,27 @@
        than push the page sideways; normal words are unaffected. */
     "html.a11y-scaled h1,html.a11y-scaled h2,html.a11y-scaled h3{overflow-wrap:break-word;hyphens:auto;}",
     "html.a11y-scaled .btn,html.a11y-scaled .res .tel{white-space:normal;}",
+    "html.a11y-scaled .nav-links .btn{white-space:nowrap;}",
+    "html.a11y-scaled .nav-links a{white-space:nowrap;}",
+    /* Pages without a hamburger to fall back to (the Updates pages) let the nav wrap
+       onto tidy rows instead of squashing links. min-height keeps it unchanged when
+       everything still fits. */
+    "html.a11y-scaled header:not(.nav-compact) .nav{height:auto;min-height:78px;flex-wrap:wrap;row-gap:8px;padding:6px 0;}",
+    "html.a11y-scaled header:not(.nav-compact) .nav-links{flex-wrap:wrap;row-gap:8px;}",
+
+    /* When enlarged text stops the desktop nav from fitting, fall back to the
+       hamburger the site already uses on small screens, rather than letting links
+       wrap mid-phrase and the pill button balloon. Mirrors the max-width:980px rules. */
+    "header.nav-compact .nav-links{display:none;}",
+    "header.nav-compact .nav-links.open{display:flex;position:absolute;top:78px;left:0;right:0;",
+    "flex-direction:column;gap:0;background:var(--ink,#131019);border-bottom:1px solid rgba(255,255,255,.1);",
+    "padding:8px 0;align-items:stretch;}",
+    "header.nav-compact .nav-links.open a{padding:14px 28px;width:100%;}",
+    "header.nav-compact .nav-links.open .btn{margin:12px 28px;justify-content:center;}",
+    "header.nav-compact .menu-toggle{display:flex;background:none;border:none;cursor:pointer;",
+    "padding:8px;flex-direction:column;gap:5px;}",
+    "header.nav-compact .menu-toggle span{width:22px;height:2px;background:#fff;border-radius:2px;}",
+    "header.nav-compact .menu-toggle:focus-visible{outline:3px solid #c9a6ff;outline-offset:2px;}",
     "html.a11y-scaled .hero-chips>*,html.a11y-scaled .chip,html.a11y-scaled .tag,",
     "html.a11y-scaled .btn,html.a11y-scaled .more,html.a11y-scaled .tel{overflow-wrap:anywhere;}",
 
@@ -267,14 +288,54 @@
     });
   }
 
-  function commit() { apply(); save(); sync(); }
+  // Decide whether the header must fall back to the hamburger. Measured rather than
+  // guessed from a breakpoint, because the nav's needs depend on the chosen text size.
+  function fitNav() {
+    var header = document.querySelector("header");
+    if (!header) return;
+    var toggle = header.querySelector(".menu-toggle");
+    var links = header.querySelector(".nav-links");
+    var nav = header.querySelector(".nav");
+    var brand = header.querySelector(".brand");
+    if (!toggle || !links || !nav) return; // page has no hamburger to fall back to
+    // Only ever intervene when text is enlarged. At the default size the site's own
+    // layout and breakpoints must behave exactly as designed.
+    if (!root.classList.contains("a11y-scaled")) { header.classList.remove("nav-compact"); return; }
+    var wasOpen = links.classList.contains("open");
+    header.classList.remove("nav-compact");
+    links.classList.remove("open");
+    // If the site's own mobile breakpoint already hid the links, leave it alone.
+    if (getComputedStyle(links).display === "none") {
+      if (wasOpen) links.classList.add("open");
+      return;
+    }
+    var avail = nav.clientWidth - (brand ? brand.offsetWidth : 0) - 48;
+    // flex-shrink silently compresses the nav instead of overflowing, so width alone
+    // never reveals the problem. Disable shrinking to read the true requirement.
+    var prevW = links.style.width, prevF = links.style.flex;
+    links.style.flex = "none";
+    links.style.width = "max-content";
+    var need = links.getBoundingClientRect().width;
+    links.style.width = prevW;
+    links.style.flex = prevF;
+    if (need > avail) header.classList.add("nav-compact");
+    if (wasOpen && header.classList.contains("nav-compact")) links.classList.add("open");
+  }
+
+  function commit() { apply(); save(); sync(); requestAnimationFrame(fitNav); }
 
   // ---------- boot ----------
   load();
   apply();          // before first paint, so nothing flashes
   injectCSS();
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", build);
-  else build();
+  function boot() { build(); fitNav(); }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+  else boot();
+  window.addEventListener("resize", function () {
+    clearTimeout(window.__a11yRz);
+    window.__a11yRz = setTimeout(fitNav, 120);
+  });
+  window.addEventListener("load", fitNav);
 
   window.__a11y = { get: function () { return JSON.parse(JSON.stringify(state)); }, apply: apply };
 })();
